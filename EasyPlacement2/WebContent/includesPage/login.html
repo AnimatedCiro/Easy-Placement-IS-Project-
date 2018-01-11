@@ -13,9 +13,11 @@
 </div>
 
 <div id="containerAutenticazione">
+
 	<div id="containerForm">
+	
 		<div id="registerForm">
-			<form method="post" action="RegisterServlet" name="register">
+			<form method="post" action="RegistraControl" name="register">
 
 				<div id="divLabel">
 					<label>Email</label>
@@ -60,19 +62,19 @@
 		</div>
 
 		<div id="loginForm">
-			<form method="post" action="LoginServlet" name="login">
+			<form method="post" action="LoginControl" name="login">
 
 				<div id="divLabel">
 					<label>Username</label>
 				</div>
 
-				<input type="text" name="usernameLogin" />
+				<input type="text" name="usernameLogin" value="username"/>
 
 				<div id="divLabel">
 					<label>Password</label>
 				</div>
 
-				<input type="password" name="passwordLogin" /> <input type="submit"
+				<input type="password" name="passwordLogin" value="password"/> <input type="submit"
 					value="Accedi" id="inputAccedi" />
 			</form>
 		</div>

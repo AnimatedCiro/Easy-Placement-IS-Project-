@@ -1,7 +1,7 @@
 package control;
 
 import database.DB_Conn;
-import model.Utente;
+import model.Studente;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,11 +13,11 @@ import java.sql.*;
 import javax.servlet.RequestDispatcher;
 
 
-@WebServlet("/RegisterServlet")
-public class RegisterServlet extends HttpServlet {
+@WebServlet("/RegistraControl")
+public class RegistraControl extends HttpServlet {
 
 
-	public RegisterServlet() {
+	public RegistraControl() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -80,13 +80,15 @@ public class RegisterServlet extends HttpServlet {
 
 				int i = psmt.executeUpdate();
 
-
+				
 
 				if (i == 1) {
-					Utente utente = new Utente();
-					utente.setUserEmail(email);
-					System.out.println("sono qui");
-					userSession.setAttribute("user", utente);
+					Studente studente = new Studente();
+					studente.setUserId(username);
+					studente.setUsername(username);
+					studente.setNome(nome);
+					studente.setCognome(cognome);
+					userSession.setAttribute("user", studente);
 					response.sendRedirect(request.getContextPath());
 				}
 
