@@ -1,6 +1,6 @@
 package control;
 
-import database.DB_Conn;
+import database.ConnessioneDB;
 import model.Studente;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -9,8 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import bean.Azienda;
+import bean.ListaAziende;
+
 import java.sql.*;
-import javax.servlet.RequestDispatcher;
 
 
 @WebServlet("/RegistraControl")
@@ -38,10 +41,6 @@ public class RegistraControl extends HttpServlet {
 		message = null;
 		String email, pass,nome,cognome,username,numTelefono;
 
-		String messageUrl = "/message.jsp";
-		RequestDispatcher dispatchMessage =
-				request.getServletContext().getRequestDispatcher(messageUrl);
-
 		email = request.getParameter("emailRegistrazione");
 		pass = request.getParameter("passwordRegistrazione");
 		nome = request.getParameter("nome");
@@ -51,54 +50,114 @@ public class RegistraControl extends HttpServlet {
 
 
 		HttpSession userSession = request.getSession();
+		Studente studente = null;
 
 		try {
-			DB_Conn con = new DB_Conn();
+			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
-			if ((request.getParameter("emailRegistrazione") != null) || (request.getParameter("emailRegistrazione") != null)){
+			String sqlAzienda = "SELECT * FROM  `AZIENDA`; ";
 
-				String sql = "INSERT INTO  `EPDatabase`.`STUDENTE` "
-						+ "(`studente_id` ,`Email` ,`Nome`,`Cognome`,`Username`,`Password`,`Numero_Telefonico` ) "
-						+ "VALUES (NULL ,  ? ,  ?,?,?,?,? ); ";
+			Statement st = c.createStatement();
+			ResultSet rsAzienda = st.executeQuery(sqlAzienda);
+			String nomeAzienda = null,sede = null,numeroTelefono = null,progettoOfferto,inizioTirocinio,fineTirocinio;
 
+			ListaAziende listaAziende = new ListaAziende(null);
 
-				PreparedStatement psmt = c.prepareStatement(sql);
+			while (rsAzienda.next()) {
 
-				psmt.setString(1, email);
-
-				psmt.setString(2, nome);
-
-				psmt.setString(3, cognome);
-
-				psmt.setString(4, username);
-
-				psmt.setString(5, pass);
-
-				psmt.setString(6, numTelefono);
+				nomeAzienda = rsAzienda.getString("Nome");
+				sede = rsAzienda.getString("Sede");
+				inizioTirocinio = rsAzienda.getString("InizioTirocinio");
+				fineTirocinio = rsAzienda.getString("FineTirocinio");
+				numeroTelefono=	rsAzienda.getString("Numero_Telefonico");
+				progettoOfferto=	rsAzienda.getString("Progetto_Offerto");
 
 
-
-				int i = psmt.executeUpdate();
-
-				
-
-				if (i == 1) {
-					Studente studente = new Studente();
-					studente.setUserId(username);
-					studente.setUsername(username);
-					studente.setNome(nome);
-					studente.setCognome(cognome);
-					userSession.setAttribute("user", studente);
-					response.sendRedirect(request.getContextPath());
-				}
+				Azienda azienda = new Azienda();
+				azienda.setNome(nomeAzienda);
+				azienda.setSede(sede);
+				azienda.setNumerotelefono(numeroTelefono);
+				azienda.setProgettoofferto(progettoOfferto);
+				azienda.setInizioTirocinio(inizioTirocinio);
+				azienda.setFineTirocinio(fineTirocinio);
+				listaAziende.addAzienda(azienda);
 
 			}
+			userSession.setAttribute("listaAziende", listaAziende);
+			st.close();
+			rsAzienda.close();
+			c.close();
+
+
+
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+
+
+
+
+		try {
+
+			ConnessioneDB con = new ConnessioneDB();
+			Connection c = con.getConnection();
+
+
+
+			String sql = "INSERT INTO  `EPDatabase`.`STUDENTE` "
+					+ "(`studente_id` ,`Email` ,`Nome`,`Cognome`,`Username`,`Password`,`Numero_Telefonico` ) "
+					+ "VALUES (NULL ,  ? ,  ?,?,?,?,? ); ";
+
+
+			PreparedStatement psmt = c.prepareStatement(sql);
+
+			psmt.setString(1, email);
+
+			psmt.setString(2, nome);
+
+			psmt.setString(3, cognome);
+
+			psmt.setString(4, username);
+
+			psmt.setString(5, pass);
+
+			psmt.setString(6, numTelefono);
+
+
+
+			int i = psmt.executeUpdate();
+
+			if (i == 1) {
+				studente = new Studente();
+				studente.setUserId(username);
+				studente.setUsername(username);
+				studente.setNome(nome);
+				studente.setCognome(cognome);
+				studente.setEmail(email);
+				studente.setNumeroTelefono(numTelefono);
+				userSession.setAttribute("user", studente);
+				response.sendRedirect(request.getContextPath()+"/index.jsp");
+			}
+
 		} catch (SQLIntegrityConstraintViolationException ex) {
-			String messageDetail = "Effettua di nuovo la registrazione";
-			message = "Account Utente Esistente";
-			request.setAttribute("message", message);
-			request.setAttribute("messageDetail", messageDetail);
-			dispatchMessage.forward(request, response);
+
+			String messageDetail;
+
+			if(ex.getMessage().equals("Duplicate entry '"+email+"' for key 'Email'")) {
+				System.out.println("sonoqui");
+				messageDetail = "Effettua di nuovo la registrazione";
+				message = "Email Utente Esistente";
+				userSession.setAttribute("message", message);
+				userSession.setAttribute("messageDetail", messageDetail);
+				response.sendRedirect(request.getContextPath()+"/message.jsp");
+			}else {
+				messageDetail = "Effettua di nuovo la registrazione";
+				message = "Username Esistente";
+				userSession.setAttribute("message", message);
+				userSession.setAttribute("messageDetail", messageDetail);
+				response.sendRedirect(request.getContextPath()+"/message.jsp");
+			}
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -1,10 +1,12 @@
-package model;
+package bean;
 
 public class Utente{
-	
+
 	public String username;
 	public String password;
 	public String cognome;
+	public String nome;
+	
 
 	public void setCognome(String cognome) {
 		this.cognome = cognome;
@@ -14,13 +16,10 @@ public class Utente{
 		this.nome = nome;
 	}
 
-	public String nome;
-
-	
 	public String getUsername (){
 		return username;
 	}
-	
+
 	public String getCognome (){
 		return cognome;
 	}
@@ -35,6 +34,4 @@ public class Utente{
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
-	
 }

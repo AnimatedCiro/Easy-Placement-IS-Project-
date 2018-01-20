@@ -2,7 +2,7 @@ package database;
 
 import java.sql.*;
 
-public class DB_Conn {
+public class ConnessioneDB {
 
 	private Connection con;
 

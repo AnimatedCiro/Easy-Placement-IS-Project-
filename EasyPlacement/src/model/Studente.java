@@ -1,7 +1,9 @@
 package model;
 
 import java.sql.*;
-import database.DB_Conn;
+
+import bean.Utente;
+import database.ConnessioneDB;
 import interfaces.FindStudente;
 
 public class Studente extends Utente implements FindStudente{
@@ -26,16 +28,31 @@ public class Studente extends Utente implements FindStudente{
 		return numeroTelefono;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setNumeroTelefono(String numeroTelefono) {
+		this.numeroTelefono = numeroTelefono;
+	}
+
 	public int findUserId (String username) throws SQLException, ClassNotFoundException{
-		
+
 		String sqlGetUserId = "SELECT  `studente_id` FROM  `STUDENTE` WHERE  `Username` =  ?";
-		c=  new DB_Conn().getConnection();
+		c=  new ConnessioneDB().getConnection();
 		PreparedStatement psmt  = c.prepareStatement(sqlGetUserId);
-		
 		psmt.setString(1, username);
 		ResultSet executeQuery = psmt.executeQuery();
 		executeQuery.next();
 		userId = executeQuery.getInt("studente_id");
 		return userId;
 	}
+
+
+
+
 }
