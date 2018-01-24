@@ -6,7 +6,7 @@ public class ListaAziende {
 
 	private ArrayList<Azienda> listaAziende;
 
-	public ListaAziende(ArrayList<Azienda> listaAziende) {
+	public ListaAziende() {
 
 		this.listaAziende = new ArrayList<>();
 	}

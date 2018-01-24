@@ -1,7 +1,7 @@
 package control;
 
 import database.ConnessioneDB;
-import model.Studente;
+import bean.Studente;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -61,7 +61,7 @@ public class RegistraControl extends HttpServlet {
 			ResultSet rsAzienda = st.executeQuery(sqlAzienda);
 			String nomeAzienda = null,sede = null,numeroTelefono = null,progettoOfferto,inizioTirocinio,fineTirocinio;
 
-			ListaAziende listaAziende = new ListaAziende(null);
+			ListaAziende listaAziende = new ListaAziende();
 
 			while (rsAzienda.next()) {
 

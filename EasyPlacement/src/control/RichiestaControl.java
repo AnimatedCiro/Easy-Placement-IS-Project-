@@ -64,7 +64,7 @@ public class RichiestaControl extends HttpServlet {
 		portatoreHAndicap = request.getParameter("optradio1");
 
 		nome = request.getParameter("nome");
-	
+
 		cognome = request.getParameter("cognome");
 
 		residenza = request.getParameter("residenza");
@@ -236,12 +236,37 @@ public class RichiestaControl extends HttpServlet {
 			psmt.setBoolean(29, portatoreHAndicapBoolean);
 			psmt.setString(30, dataFirma);
 			psmt.executeUpdate();
+			psmt.close();
+
+			String insertRichiesta = "INSERT INTO  `RICHIESTA` ("
+					+ "`id_studente`,"	
+					+ "`Stato`,"
+					+ "`Nome`,"
+					+ "`Cognome`,"
+					+ "`Matricola`,"
+					+ "`Responsabile Aziendale`"
+					+ ")"
+					+ "VALUES ("
+					+ "?,?,?,?,?,?"
+					+ ");";
+			
+			psmt = c.prepareStatement(insertRichiesta);
+			psmt.setInt(1, idStudenteInt);
+			psmt.setBoolean(2, false);
+			psmt.setString(3, nome);	
+			psmt.setString(4, cognome);
+			psmt.setString(5, matricola);
+			psmt.setString(6, nomeUtenteResponsabileAziendale);
+			psmt.executeUpdate();
+			psmt.close();
+
 			response.sendRedirect(request.getContextPath()+"/index.jsp");
+
 
 		} catch (Exception ex) {
 
 			ex.printStackTrace();
-			
+
 			if(ex.getMessage().equals("Duplicate entry '"+idStudenteInt+"' for key 'PRIMARY'")) {
 
 				String messageDetail = "Torna indietro";
@@ -251,11 +276,7 @@ public class RichiestaControl extends HttpServlet {
 				userSession.setAttribute("messageDetail", messageDetail);
 				response.sendRedirect(request.getContextPath()+"/message.jsp");
 			}
-
-
 		}
-
-
 	}
 
 }

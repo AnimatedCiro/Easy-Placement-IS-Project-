@@ -12,6 +12,10 @@ public class Utente{
 		this.cognome = cognome;
 	}
 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}

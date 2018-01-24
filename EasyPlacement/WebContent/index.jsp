@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -28,6 +25,3 @@
 
 </body>
 </html>
-
-
-

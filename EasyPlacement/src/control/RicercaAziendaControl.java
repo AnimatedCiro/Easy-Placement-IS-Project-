@@ -49,7 +49,7 @@ public class RicercaAziendaControl extends HttpServlet {
 
 		String sqlSearch = "SELECT * FROM `AZIENDA` WHERE `Nome` =" + "'" + azienda+"'";
 		
-		ListaAziende listaSearch = new ListaAziende(null);
+		ListaAziende listaSearch = new ListaAziende();
 	
 		try {
 			ConnessioneDB con = new ConnessioneDB();

@@ -11,6 +11,7 @@ $(document).ready(function() {
 		$('#formRicerca').show();
 	});
 });
+
 $(document).ready(function() {
 	$('#formRicerca').hide();
 	$('#consultaRegistro').hide();
@@ -24,6 +25,7 @@ $(document).ready(function() {
 		$('#consultaRegistro').show();
 	});
 });
+
 $(document).ready(function() {
 	$('#formRicerca').hide();
 	$('#consultaRegistro').hide();
@@ -37,6 +39,7 @@ $(document).ready(function() {
 		$('#compilaModuli').show();
 	});
 });
+
 $(document).ready(function() {
 	$('#formRicerca').hide();
 	$('#consultaRegistro').hide();
@@ -51,5 +54,23 @@ $(document).ready(function() {
 	});
 });
 
+$(document).ready(function() {
+	$('#formRicerca').hide();
+	$('#compilaModuli').hide();
+	$('.richiestaStudente').click(function() {
+		$('#compilaModuli').hide();
+		$('#divListaRichieste').css('display');
+		$('#divListaRichieste').show();
+	});
+});
 
+$(document).ready(function() {
+	$('#formRicerca').hide();
+	$('#compilaModuli').hide();
+	$('.compilaModuli').click(function() {
+		$('#formRicerca').hide();
+		$('#compilaModuli').css('display');
+		$('#compilaModuli').show();
+	});
+});
 

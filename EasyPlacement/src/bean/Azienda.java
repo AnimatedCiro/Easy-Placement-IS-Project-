@@ -13,7 +13,10 @@ public class Azienda {
 	private String inizioTirocinio;
 	private String fineTirocinio;
 
-
+	public Azienda() {
+		super();
+	}
+	
 	public String getInizioTirocinio() {
 		return inizioTirocinio;
 	}

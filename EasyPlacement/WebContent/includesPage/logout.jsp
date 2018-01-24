@@ -1,11 +1,11 @@
-<%@page import="model.UfficioStageTirocini"%>
-<%@page import="model.TutorAziendale"%>
-<%@page import="model.TutorAccademico"%>
-<%@page import="model.PresidenteConsiglioDidattico"%>
+<%@page import="bean.UfficioStageTirocini"%>
+<%@page import="bean.TutorAziendale"%>
+<%@page import="bean.TutorAccademico"%>
+<%@page import="bean.PresidenteConsiglioDidattico"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="model.ResponsabileAziendale"%>
-<%@page import="model.Studente"%>
+<%@page import="bean.ResponsabileAziendale"%>
+<%@page import="bean.Studente"%>
 <%@page import="bean.Utente"%>
 <jsp:include page="/includesPage/stylesheets.html"></jsp:include>
 
@@ -140,15 +140,6 @@
 		String inizialeC = tutorAziendale.getCognome().substring(0, 1);
 		String finaleC = tutorAziendale.getCognome().substring(1, tutorAziendale.getCognome().length());
 		String cognome = inizialeC.toUpperCase() + finaleC.toLowerCase();
-		
-		
-		
-		
-		
-		
-		
-		
-		
 %>
 
 <div style="margin-top: 0px;">
@@ -164,14 +155,13 @@
 	</ul>
 </div>
 
-
 <%@include file="/home_TutorAziendale.jsp"%>
+
 
 <%
 	} else if (utente.getUsername().contains("ufficioStageETirocini")) {
 
 		UfficioStageTirocini ufficioStageETirocini = (UfficioStageTirocini) session.getAttribute("user");
-		System.out.print("sono qui");
 		String uid = ufficioStageETirocini.getNomeUtente();
 %>
 

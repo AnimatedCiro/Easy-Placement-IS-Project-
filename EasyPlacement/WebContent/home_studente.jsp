@@ -1,3 +1,5 @@
+<%@page import="bean.Studente"%>
+<%@page import="bean.ListaTirocini"%>
 <%@page import="bean.Azienda"%>
 <%@page import="bean.ListaAziende"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -44,6 +46,22 @@ td, th {
 			<li class=progettoFormativo>(DA TOGLIERE)Progetto Formativo</li>
 		</ul>
 	</div>
+
+
+	<%
+		Studente studente1 = (Studente) session.getAttribute("user");
+		ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
+		String a = "";
+
+		for (int i = 0; i < listaTirocini.getListaTirocini().size(); i++) {
+			if (listaTirocini.getListaTirocini().get(i).getId() == studente1.getUserId()) {
+				a = "Tirocinio Approvato";
+			}
+		}
+	%>
+
+
+
 	<div
 		style="position: absolute; top: 100px; left: 250px; width: 76%; height: auto;"
 		id="leftside">
@@ -51,6 +69,19 @@ td, th {
 		<div id="formRicerca"
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
+
+
+			<%
+				if (a.equalsIgnoreCase("Tirocinio Approvato")) {
+			%>
+
+			<h1><%=a%></h1>
+			<%
+				} else
+
+				{
+			%>
+
 
 			<form action="RicercaAzienda" method="post" name="ricerca">
 
@@ -74,10 +105,10 @@ td, th {
 					<%
 						if (session.getAttribute("listaAziende") == null) {
 
-						} else {
+							} else {
 
-							ListaAziende listaAziende = (ListaAziende) session.getAttribute("listaAziende");
-							for (int i = 0; i < listaAziende.getListaAziende().size(); i++) {
+								ListaAziende listaAziende = (ListaAziende) session.getAttribute("listaAziende");
+								for (int i = 0; i < listaAziende.getListaAziende().size(); i++) {
 					%>
 
 					<tr>
@@ -92,12 +123,16 @@ td, th {
 					</tr>
 					<%
 						}
-						}
+							}
 					%>
 				</table>
 			</div>
-		</div>
 
+
+			<%
+				}
+			%>
+		</div>
 		<div id="consultaRegistro"
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
