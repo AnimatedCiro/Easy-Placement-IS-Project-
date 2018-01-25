@@ -238,6 +238,9 @@ public class LoginControl extends HttpServlet {
 				progettoFormativo.setInpossessodiLaurea(rs.getString("InpossessodiLaurea"));
 				progettoFormativo.setPortatoreHandicap(rs.getBoolean("PortatoreHandicap"));
 				progettoFormativo.setDataFirma(rs.getString("DataFirma"));
+				progettoFormativo.setDataFirma(rs.getString("DataInizio"));
+				progettoFormativo.setDataFirma(rs.getString("DataFine"));
+				progettoFormativo.setDataFirma(rs.getString("Sede"));
 
 				listaprogettiFormativi.addProgettoFormativo(progettoFormativo);
 			}
@@ -648,7 +651,3 @@ public class LoginControl extends HttpServlet {
 		}
 	}
 }
-/*Tirocinio tirocinio = new Tirocinio();
-								tirocinio.setEmailStudente(listaprogettiFormativi.getListaProgettoFormativo().get(i).getEmail_Studente());
-								tirocinio.setId(listaprogettiFormativi.getListaProgettoFormativo().get(i).getId());
-								listaTirocini.addTirocinio(tirocinio);*/

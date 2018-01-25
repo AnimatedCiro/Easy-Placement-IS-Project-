@@ -1,4 +1,4 @@
-package model;
+package bean;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,11 +9,10 @@ import bean.Utente;
 import database.ConnessioneDB;
 import interfaces.FindUser;
 
-public class PresidenteConsiglioDidattico extends Utente implements FindUser{
+public class TutorAccademico extends Utente implements FindUser{
 
 	private Connection c;
 	private String nomeUtente;
-
 
 	public String getNomeUtente() {
 		return nomeUtente;
@@ -25,7 +24,7 @@ public class PresidenteConsiglioDidattico extends Utente implements FindUser{
 
 	@Override
 	public String findUser(String username) throws ClassNotFoundException, SQLException {
-		String sqlGetUserId = "SELECT  `Nome_Utente` FROM  `PRESIDENTE CONSIGLIO DIDATTICO`";
+		String sqlGetUserId = "SELECT  `Nome_Utente` FROM  `TUTOR ACCADEMICO`";
 		c=  new ConnessioneDB().getConnection();
 		PreparedStatement psmt  = c.prepareStatement(sqlGetUserId);
 		ResultSet executeQuery = psmt.executeQuery();

@@ -95,6 +95,10 @@ public class RichiestaControl extends HttpServlet {
 
 		idStudente = request.getParameter("id");
 
+		String dataInizio= request.getParameter("inizio");
+		String dataFine = request.getParameter("fine");
+		String sede = request.getParameter("sede");
+		
 		idStudenteInt = Integer.parseInt(idStudente);
 
 		numeroCFUInt = Integer.parseInt(numeroCFU);
@@ -197,10 +201,13 @@ public class RichiestaControl extends HttpServlet {
 					+ "`DataConseguimentoLaurea` ,"
 					+ "`InpossessodiLaurea` ,"
 					+ "`PortatoreHandicap`,"
-					+ "`DataFirma`"
+					+ "`DataFirma`,"
+					+ "`DataInizio`,"
+					+ "`DataFine`,"
+					+ "`Sede`"
 					+ " )"
 					+ "VALUES ("
-					+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
+					+ "?,?,?,?,?,?,,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
 					+ ");";
 			PreparedStatement psmt = c.prepareStatement(insertPF);
 			psmt.setInt(1, idStudenteInt);
@@ -235,6 +242,10 @@ public class RichiestaControl extends HttpServlet {
 			psmt.setString(28, possessoLAurea);///
 			psmt.setBoolean(29, portatoreHAndicapBoolean);
 			psmt.setString(30, dataFirma);
+			psmt.setString(31, dataInizio);
+			psmt.setString(32, dataFine);
+			psmt.setString(33, sede);
+			
 			psmt.executeUpdate();
 			psmt.close();
 

@@ -316,7 +316,8 @@ label {
 				<div class="col">
 					<h3 style="border: 2px solid;">
 						<label style="margin-top: 30px;" class="form-check-label"
-							for="defaultCheck1">Sede azienda : <%=sede%>
+							for="defaultCheck1">Sede azienda : <%=sede%> <input
+							type="text" value="<%=sede%>" name="sede" style="display: none;">
 						</label>
 					</h3>
 				</div>
@@ -341,11 +342,13 @@ label {
 					style="margin-top: 19px;" class="form-check-label"
 					for="defaultCheck1">&nbsp;Dal</label><label
 					style="margin-top: 19px;" class="form-check-label"
-					for="defaultCheck1">&nbsp;<%=inizio%>
+					for="defaultCheck1">&nbsp;<%=inizio%> <input type="text"
+					value="<%=inizio%>" name="inizio" style="display: none;">
 				</label> <label style="margin-top: 19px;" class="form-check-label"
 					for="defaultCheck1">&nbsp;al</label><label
 					style="margin-top: 19px;" class="form-check-label"
-					for="defaultCheck1">&nbsp;<%=fine%></label><label
+					for="defaultCheck1">&nbsp;<%=fine%> <input type="text"
+					value="<%=fine%>" name="fine" style="display: none;"></label><label
 					style="margin-top: 19px;" class="form-check-label"
 					for="defaultCheck1">&nbsp;per totale ore </label><label
 					style="margin-top: 19px;" class="form-check-label"

@@ -1,4 +1,4 @@
-package model;
+package bean;
 
 import java.sql.*;
 
@@ -13,7 +13,7 @@ public class Studente extends Utente implements FindStudente{
 	public String email;
 	public String numeroTelefono;
 	public int userId = 0;
-
+	
 	public void setUserId (String username) throws ClassNotFoundException, SQLException{
 		this.userId = findUserId(username);     
 	}

@@ -15,7 +15,6 @@
 <script type="text/javascript" src="javaScript/librerieJQuery/jquery.js"></script>
 <script type="text/javascript" src="javaScript/visualizzaCampi.js"></script>
 <%@include file="includesPage/stylesheets.html"%>
-<link rel="stylesheet" type="text/css" href="css/inputfirme.css">
 
 
 <style>
@@ -30,6 +29,23 @@ td, th {
 	text-align: left;
 	padding: 8px;
 	background-color: white;
+}
+
+a:link, a:visited {
+	background-color: #ff8221;
+	color: black;
+	padding: 14px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+
+#buttonLogout a {
+	margin-top: -10px;
+	margin-right: -10px;
+	margin-bottom: -10px;
+	margin-left: -10px;
+	padding: 5px;
 }
 </style>
 
@@ -68,10 +84,6 @@ td, th {
 				<table class="table" style="position: absolute; top: 50px;">
 					<%
 						for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
-
-							System.out.println(lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale());
-							System.out.println(tutor_Aziendale.getUsername());
-							System.out.println(lista.getListaProgettoFormativo().get(i).getId());
 
 							if (lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale()
 									.equalsIgnoreCase(tutor_Aziendale.getUsername())) {
@@ -125,6 +137,10 @@ td, th {
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
 
+			<div class="panel-heading">
+				<h2 style="color: #ff8221; size: 100px; font-family: sans-serif;">Firma
+					presenza studente</h2>
+			</div>
 
 			<%
 				ListaUtenti listaUtenti = (ListaUtenti) session.getAttribute("listaUtenti");
@@ -138,29 +154,18 @@ td, th {
 							if (id == listaTirocini.getListaTirocini().get(y).getId()) {
 								for (int z = 0; z < listaUtenti.getListaUtenti().size(); z++) {
 									if (id == listaUtenti.getListaUtenti().get(z).getUserId()) {
+										String iniziale = listaUtenti.getListaUtenti().get(z).getNome().substring(0, 1);
+										String finale = listaUtenti.getListaUtenti().get(z).getNome().substring(1,
+												listaUtenti.getListaUtenti().get(z).getNome().length());
+										String nom = iniziale.toUpperCase() + finale.toLowerCase();
+
+										String inizial = listaUtenti.getListaUtenti().get(z).getCognome().substring(0, 1);
+										String fina = listaUtenti.getListaUtenti().get(z).getCognome().substring(1,
+												listaUtenti.getListaUtenti().get(z).getCognome().length());
+										String cognom = inizial.toUpperCase() + fina.toLowerCase();
 			%>
-
-			<form action="FirmaPresenza" method="post" name="firmapresenza">
-
-				<div>
-					<input style="font-size: 25px; top: 5px;" id="input2" type="text"
-						value="Nome Utente" readonly="readonly"> <input
-						style="display: none;  -webkit-appearance: none; background-color: #fafafa; border: 1px solid #cacece; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05); padding: 9px; display: inline-block; position: relative; overflow: hidden;"
-						id="input3" type="checkbox" value=""> <label
-						style="-webkit-appearance: none; display: inline; background-color: #fafafa; border: 1px solid #cacece; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05); padding: 9px; display: inline-block; position: relative; overflow: hidden;"
-						id="label1">Firma Presenza</label>
-
-				</div>
-
-			</form>
-
-
-
-
-
-
-
-
+			<a style="border: 3px solid; margin-top: 20px; margin-right: 20px;"
+				href="firmaPresenze.jsp?id_studente=<%=listaUtenti.getListaUtenti().get(z).getUserId()%>"><%=nom + " " + cognom%></a>
 			<%
 				}
 								}
@@ -169,10 +174,7 @@ td, th {
 					}
 				}
 			%>
-
 		</div>
-
-
 	</div>
 </body>
 </html>

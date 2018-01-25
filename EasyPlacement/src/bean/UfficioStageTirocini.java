@@ -1,36 +1,30 @@
-package model;
+package bean;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import bean.Utente;
 import database.ConnessioneDB;
 import interfaces.FindUser;
 
-public class ResponsabileAziendale extends Utente implements FindUser{
+public class UfficioStageTirocini extends Utente implements FindUser{
 
-	private	Connection c;
+	private Connection c;
 	private String nomeUtente;
-	private String nomeAzienda;
-
-	public String getNomeAzienda() {
-		return nomeAzienda;
-	}
-
-	public void setNomeAzienda(String nomeAzienda) {
-		this.nomeAzienda = nomeAzienda;
-	}
 
 	public String getNomeUtente() {
 		return nomeUtente;
 	}
 
-	public void setNomeUtente(String nomeUtente) throws ClassNotFoundException, SQLException {
-		this.nomeUtente = findUser(nomeUtente);
+	public void setNomeUtente(String username) throws ClassNotFoundException, SQLException {
+		this.nomeUtente = findUser(username);
 	}
 
 	@Override
 	public String findUser(String username) throws ClassNotFoundException, SQLException {
-		String sqlGetUserId = "SELECT  `Nome_Utente` FROM  `RESPONSABILE AZIENDALE`";
+		String sqlGetUserId = "SELECT  `Nome_Utente` FROM  `UFFICIO STAGE E TIROCINI`";
 		c=  new ConnessioneDB().getConnection();
 		PreparedStatement psmt  = c.prepareStatement(sqlGetUserId);
 		ResultSet executeQuery = psmt.executeQuery();
