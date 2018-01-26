@@ -1,4 +1,4 @@
-package control;
+package gestioneAutenticazione;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -13,10 +13,12 @@ import javax.servlet.http.HttpSession;
 import bean.Azienda;
 import bean.ListaAziende;
 import bean.ListaProgettiFormativi;
+import bean.ListaRegistro;
 import bean.ListaRichieste;
 import bean.ListaTirocini;
 import bean.ListaUtenti;
 import bean.ProgettoFormativo;
+import bean.Registro;
 import bean.Richiesta;
 import database.ConnessioneDB;
 import bean.PresidenteConsiglioDidattico;
@@ -238,9 +240,9 @@ public class LoginControl extends HttpServlet {
 				progettoFormativo.setInpossessodiLaurea(rs.getString("InpossessodiLaurea"));
 				progettoFormativo.setPortatoreHandicap(rs.getBoolean("PortatoreHandicap"));
 				progettoFormativo.setDataFirma(rs.getString("DataFirma"));
-				progettoFormativo.setDataFirma(rs.getString("DataInizio"));
-				progettoFormativo.setDataFirma(rs.getString("DataFine"));
-				progettoFormativo.setDataFirma(rs.getString("Sede"));
+				progettoFormativo.setDataInizio(rs.getString("DataInizio"));
+				progettoFormativo.setDataFine(rs.getString("DataFine"));
+				progettoFormativo.setSede(rs.getString("Sede"));
 
 				listaprogettiFormativi.addProgettoFormativo(progettoFormativo);
 			}
@@ -355,6 +357,7 @@ public class LoginControl extends HttpServlet {
 			}
 
 			else if (username.contains("tutorAziendale")) {
+
 				ConnessioneDB con = new ConnessioneDB();
 				Connection c = con.getConnection();
 				String sqlGetUsers;
@@ -362,9 +365,13 @@ public class LoginControl extends HttpServlet {
 				sqlGetUsers = "SELECT  `Nome_Utente` ,  "
 						+ "`Password`,`Nome`,`Cognome`,`Numero_Telefonico`,`Email`,`Nome_Azienda` FROM  `TUTOR AZIENDALE`; ";
 
-				PreparedStatement st = c.prepareStatement(sqlGetUsers);
-				ResultSet rs = st.executeQuery();
+				PreparedStatement st; 
+				ResultSet rs; 
 
+
+
+				st = c.prepareStatement(sqlGetUsers);
+				rs = st.executeQuery();
 				while (rs.next()) {
 					String nome,cognome,numeroTelefonico,email,nomeAzienda;
 					db_username = rs.getString("Nome_Utente");
@@ -402,6 +409,25 @@ public class LoginControl extends HttpServlet {
 						isLoggedIn = false;
 					}
 				}
+
+				ListaRegistro listaRegistro = new ListaRegistro();
+
+				try {
+					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
+					st = c.prepareStatement(sqlSelect);
+					rs = st.executeQuery();
+					while (rs.next()) {
+						Registro registro = new Registro();
+						registro.setData(rs.getString("Data"));
+						registro.setIsFirmed(rs.getBoolean("Firma"));
+						registro.setId(rs.getInt("Id_Progetto_Formativo"));
+						listaRegistro.addRegistro(registro);
+					}
+					userSession.setAttribute("listaRegistro", listaRegistro);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 				if (isLoggedIn == false){
 					userSession.setAttribute("message", message);
 					userSession.setAttribute("messageDetail", messageDetail);
@@ -456,6 +482,7 @@ public class LoginControl extends HttpServlet {
 			}
 
 			else if (username.contains("presidenteConsiglioDidattico")) {
+
 				ConnessioneDB con = new ConnessioneDB();
 				Connection c = con.getConnection();
 				String sqlGetUsers;
@@ -531,6 +558,24 @@ public class LoginControl extends HttpServlet {
 					}
 
 				}catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				ListaRegistro listaRegistro = new ListaRegistro();
+
+				try {
+					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
+					st = c.createStatement();
+					rs = st.executeQuery(sqlSelect);
+					while (rs.next()) {
+						Registro registro = new Registro();
+						registro.setData(rs.getString("Data"));
+						registro.setIsFirmed(rs.getBoolean("Firma"));
+						registro.setId(rs.getInt("Id_Progetto_Formativo"));
+						listaRegistro.addRegistro(registro);
+					}
+					userSession.setAttribute("listaRegistro", listaRegistro);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 

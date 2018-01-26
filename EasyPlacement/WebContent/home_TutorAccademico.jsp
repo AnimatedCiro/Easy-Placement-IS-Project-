@@ -13,7 +13,7 @@
 <script type="text/javascript" src="javaScript/librerieJQuery/jquery.js"></script>
 <script type="text/javascript" src="javaScript/visualizzaCampi.js"></script>
 <%@include file="includesPage/stylesheets.html"%>
-
+<script type="text/javascript" src="javaScript/firmaValidator.js"></script>
 <style>
 table {
 	font-family: arial, sans-serif;
@@ -31,6 +31,9 @@ td, th {
 
 </head>
 <body>
+	<%
+		try {
+	%>
 
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
@@ -47,7 +50,7 @@ td, th {
 	<%
 		TutorAccademico tutor_Accademico = (TutorAccademico) session.getAttribute("user");
 
-		ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+			ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
 	%>
 
 	<div
@@ -62,12 +65,13 @@ td, th {
 					<%
 						for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
 
-							System.out.println(lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale());
-							System.out.println(tutor_Accademico.getUsername());
-							System.out.println(lista.getListaProgettoFormativo().get(i).getId());
+								System.out.println(lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale());
+								System.out.println(tutor_Accademico.getUsername());
+								System.out.println(lista.getListaProgettoFormativo().get(i).getId());
 
-							if (lista.getListaProgettoFormativo().size() != 0) {
-								if (lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Accademico() == false) {
+								if (lista.getListaProgettoFormativo().size() != 0) {
+									if (lista.getListaProgettoFormativo().get(i).isFirma_Azienda()) {
+										if (lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Accademico() == false) {
 					%>
 					<tr>
 						<th><%=lista.getListaProgettoFormativo().get(i).getNome()%></th>
@@ -81,20 +85,24 @@ td, th {
 
 					</tr>
 					<%
-						} else {
+						}
+									} else {
 					%>
 					<tr>
 						<th>Nessun Studente</th>
 					</tr>
 					<%
 						}
-							} else {
+								} else {
 					%>
 					<tr>
 						<th>Nessun Studente</th>
 					</tr>
 					<%
 						}
+							}
+						} catch (Exception e) {
+							response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 						}
 					%>
 				</table>

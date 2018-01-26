@@ -33,6 +33,10 @@ td, th {
 </head>
 <body>
 
+	<%
+		try {
+	%>
+
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
 			style="margin-top: 10px">
@@ -48,8 +52,8 @@ td, th {
 
 	<%
 		ListaRichieste listaRichieste = (ListaRichieste) session.getAttribute("listaRichieste");
-		ResponsabileAziendale responsabileAziendale = (ResponsabileAziendale) session.getAttribute("user");
-		String matricola;
+			ResponsabileAziendale responsabileAziendale = (ResponsabileAziendale) session.getAttribute("user");
+			String matricola;
 	%>
 
 
@@ -73,14 +77,14 @@ td, th {
 					<%
 						for (int i = 0; i < listaRichieste.getListaRichieste().size(); i++) {
 
-							if (listaRichieste.getListaRichieste().get(i).getNomeUtenteResponsabileAziendale()
-									.equalsIgnoreCase(responsabileAziendale.getUsername())) {
-								if (listaRichieste.getListaRichieste().get(i).getMatricola().equalsIgnoreCase("")) {
-									matricola = "Nessuna Matricola";
-								} else {
-									matricola = listaRichieste.getListaRichieste().get(i).getMatricola();
-								}
-								if (listaRichieste.getListaRichieste().get(i).isStato() == false) {
+								if (listaRichieste.getListaRichieste().get(i).getNomeUtenteResponsabileAziendale()
+										.equalsIgnoreCase(responsabileAziendale.getUsername())) {
+									if (listaRichieste.getListaRichieste().get(i).getMatricola().equalsIgnoreCase("")) {
+										matricola = "Nessuna Matricola";
+									} else {
+										matricola = listaRichieste.getListaRichieste().get(i).getMatricola();
+									}
+									if (listaRichieste.getListaRichieste().get(i).isStato() == false) {
 					%>
 					<tr>
 						<th><%=listaRichieste.getListaRichieste().get(i).getNomeStudente()%></th>
@@ -101,13 +105,16 @@ td, th {
 					</tr>
 					<%
 						}
-							} else {
+								} else {
 					%>
 					<tr>
 						<th>Nessuna Richiesta</th>
 					</tr>
 					<%
 						}
+							}
+						} catch (Exception e) {
+							response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 						}
 					%>
 				</table>

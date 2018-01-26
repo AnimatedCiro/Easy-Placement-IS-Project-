@@ -1,3 +1,5 @@
+<%@page import="bean.ListaRegistro"%>
+<%@page import="java.util.List"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.util.Date"%>
@@ -12,13 +14,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 <head>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>EasyPLacement</title>
 
 <%@include file="includesPage/stylesheets.html"%>
 
+<script type="text/javascript" src="javaScript/firmaValidator.js"></script>
 
 
 
@@ -130,6 +135,11 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 </style>
 </head>
 <body>
+
+	<%
+		try {
+	%>
+
 	<div style="margin-top: 0px;">
 		<ul>
 			<li style="border: 3px solid;" id="nomeUtenteLoggato"><a
@@ -150,55 +160,156 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			class="row">
 
 			<div class="panel-heading">
-				<h2 style="color: #ff8221; size: 100px; font-family: sans-serif;">Firma
+				<h2
+					style="color: #ff8221; size: 100px; font-family: sans-serif; margin-bottom: 20px;">Firma
 					presenza studente</h2>
 			</div>
 
 
 			<%
-				String id = request.getParameter("id_studente");
-				int idS = Integer.parseInt(id);
+				ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
 
-				String stringDataInizio = "01/01/2018", stringDataFine = "25/01/2018";
+					if (registro.getListaRegistro().size() > 3) {
 
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-				Date dataInizio = df.parse(stringDataInizio);
-				Date dataFine = df.parse(stringDataFine);
-
-				GregorianCalendar calInizio = new GregorianCalendar();
-
-				calInizio.setTime(dataInizio);
-
-				GregorianCalendar calFine = new GregorianCalendar();
-
-				calFine.setTime(dataFine);
-
-				
-
-				ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
-
-				for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
-					if (lista.getListaProgettoFormativo().get(i).getId() == idS) {
-						//dataInizio = lista.getListaProgettoFormativo().get(i).getDataInizio();
-						//dataFine = lista.getListaProgettoFormativo().get(i).getDataFine();
-					}
+						for (int i = registro.getListaRegistro().size() - 3; i < registro.getListaRegistro().size(); i++) {
+			%>
+			<form style="margin-top: 10px;">
+				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
+					style="left: 100px;"><input type="checkbox"
+					checked="checked" disabled="disabled" "
+						id="chkProdTomove" />
+					<span class="check-box-effect"></span> </label>
+			</form>
+			<%
 				}
+
+					} else {
+						for (int i = 0; i < registro.getListaRegistro().size(); i++) {
+			%>
+			<form style="margin-top: 10px;">
+				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
+					style="left: 100px;"><input type="checkbox"
+					checked="checked" disabled="disabled" "
+						id="chkProdTomove" />
+					<span class="check-box-effect"></span> </label>
+			</form>
+			<%
+				}
+					}
 			%>
 
+			<%
+				String id = request.getParameter("id_studente");
+					int idS = Integer.parseInt(id);
 
+					String stringDataInizio = "", stringDataFine = "";
+
+					ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+
+					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
+						if (lista.getListaProgettoFormativo().get(i).getId() == idS) {
+							stringDataInizio = lista.getListaProgettoFormativo().get(i).getDataInizio();
+							stringDataFine = lista.getListaProgettoFormativo().get(i).getDataFine();
+						}
+					}
+
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+					Date dataInizio = df.parse(stringDataInizio);
+
+					Date dataFine = df.parse(stringDataFine);
+
+					List<Date> dates = new ArrayList<Date>();
+
+					Calendar calendar = new GregorianCalendar();
+
+					calendar.setTime(dataInizio);
+
+					while (calendar.getTime().before(dataFine)) {
+						Date result = calendar.getTime();
+						dates.add(result);
+						calendar.add(Calendar.DATE, 1);
+					}
+
+					for (int i = 0; i < dates.size(); i++) {
+
+						Calendar g = new GregorianCalendar();
+						g.setTime(dates.get(i));
+
+						if (g.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+			%>
+
+			<h2>Oggi è Sabato</h2>
+
+			<%
+				} else if (g.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			%>
+
+			<h2>Oggi è Domenica</h2>
+
+			<%
+				} else {
+							GregorianCalendar g2 = new GregorianCalendar();
+							if (g2.getTime().after(dataInizio)) {
+								String today = df.format(g2.getTime());
+								String dataStr2 = df.format(dates.get(i).getTime());
+
+								if (registro.getListaRegistro().size() != 0) {
+									for (int y = registro.getListaRegistro().size() - 1; y < registro.getListaRegistro()
+											.size(); y++) {
+										if (!registro.getListaRegistro().get(registro.getListaRegistro().size() - 1)
+												.getData().equalsIgnoreCase(today)) {
+
+											if (idS == registro.getListaRegistro().get(y).getId()) {
+												Date d = df.parse(registro.getListaRegistro().get(y).getData());
+												if (d.before(g2.getTime()) && dataStr2.equalsIgnoreCase(today)) {
+			%>
 			<form action="FirmaPresenza" method="post" name="firmapresenza"
-				onsubmit="return(firmaValidator)">
+				onsubmit="return(validator())" style="margin-top: 10px;">
 				<input
 					style="font-size: 15px; display: none; position: relative; top: 0%; left: 0%; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); -o-transform: translate(0%, 0%); transform: translate(0%, 0%); width: 150px; padding: 8px; margin-bottom: 0px; margin-top: 0px; border: none; border-radius: 4px; box-sizing: border-box;"
-					readonly="readonly" value="<%=id%>"> <label><input
-					type="checkbox" id="chkProdTomove" /> <span
-					class="check-box-effect"></span> </label> <input
-					style="font-size: 15px; background-color: #ff8221; cursor: pointer; position: relative; top: -10px; left: 55%; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); -o-transform: translate(0%, 0%); curtransform: translate(0%, 0%); width: 70px; padding: 8px; margin-bottom: 0px; margin-top: 0px; display: inline-block; border: 3px solid; border-radius: 4px; box-sizing: border-box;"
+					readonly="readonly" value="<%=id%>" name="id1"><a
+					style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=dataStr2%></a><input
+					style="display: none;" name="data" value="<%=dataStr2%>"> <label
+					style="left: 100px;"><input type="checkbox" name="check"
+					id="chkProdTomove" /> <span class="check-box-effect"></span> </label> <input
+					style="font-size: 15px; background-color: #ff8221; cursor: pointer; position: relative; top: -10px; left: 25%; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); -o-transform: translate(0%, 0%); curtransform: translate(0%, 0%); width: 70px; padding: 8px; margin-bottom: 0px; margin-top: 0px; display: inline-block; border: 3px solid; border-radius: 4px; box-sizing: border-box;"
 					type="submit" value="Firma">
 			</form>
 			<%
-				
+				System.out.println(dataStr2);
+													i = dates.size();
+												} else {
+												}
+											}
+										} else {
+											i = dates.size();
+										}
+									}
+								} else if (registro.getListaRegistro().size() == 0 && i == 0) {
+			%>
+			<form action="FirmaPresenza" method="post" name="firmapresenza"
+				onsubmit="return(validator())" style="margin-top: 10px;">
+				<input
+					style="font-size: 15px; display: none; position: relative; top: 0%; left: 0%; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); -o-transform: translate(0%, 0%); transform: translate(0%, 0%); width: 150px; padding: 8px; margin-bottom: 0px; margin-top: 0px; border: none; border-radius: 4px; box-sizing: border-box;"
+					readonly="readonly" value="<%=id%>" name="id1"><a
+					style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=dataStr2%></a><input
+					style="display: none;" name="data" value="<%=dataStr2%>"> <label
+					style="left: 100px;"><input type="checkbox" name="check"
+					id="chkProdTomove" /> <span class="check-box-effect"></span> </label> <input
+					style="font-size: 15px; background-color: #ff8221; cursor: pointer; position: relative; top: -10px; left: 25%; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); -o-transform: translate(0%, 0%); curtransform: translate(0%, 0%); width: 70px; padding: 8px; margin-bottom: 0px; margin-top: 0px; display: inline-block; border: 3px solid; border-radius: 4px; box-sizing: border-box;"
+					type="submit" value="Firma">
+			</form>
+			<%
+				}
+							}
+						}
+
+					}
+				} catch (Exception e) {
+
+					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+				}
 			%>
 		</div>
 	</div>

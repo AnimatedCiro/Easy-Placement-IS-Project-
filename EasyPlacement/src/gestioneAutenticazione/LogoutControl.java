@@ -1,4 +1,4 @@
-package control;
+package gestioneAutenticazione;
 
 
 import java.io.IOException;

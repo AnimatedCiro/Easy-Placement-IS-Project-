@@ -1,4 +1,4 @@
-package control;
+package gestioneAccount;
 
 import database.ConnessioneDB;
 import bean.Studente;

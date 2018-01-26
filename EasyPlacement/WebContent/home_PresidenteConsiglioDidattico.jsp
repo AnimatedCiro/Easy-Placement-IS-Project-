@@ -31,6 +31,9 @@ td, th {
 
 </head>
 <body>
+	<%
+		try {
+	%>
 
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
@@ -44,9 +47,10 @@ td, th {
 
 
 	<%
-		PresidenteConsiglioDidattico presidentePCD = (PresidenteConsiglioDidattico) session.getAttribute("user");
+		PresidenteConsiglioDidattico presidentePCD = (PresidenteConsiglioDidattico) session
+					.getAttribute("user");
 
-		ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+			ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
 	%>
 
 	<div
@@ -61,12 +65,14 @@ td, th {
 					<%
 						for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
 
-							System.out.println(lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale());
-							System.out.println(presidentePCD.getUsername());
-							System.out.println(lista.getListaProgettoFormativo().get(i).getId());
+								System.out.println(lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale());
+								System.out.println(presidentePCD.getUsername());
+								System.out.println(lista.getListaProgettoFormativo().get(i).getId());
 
-							if (lista.getListaProgettoFormativo().size() != 0) {
-								if (lista.getListaProgettoFormativo().get(i).isFirma_Presidente_Consiglio_Didattico() == false) {
+								if (lista.getListaProgettoFormativo().size() != 0) {
+									if (lista.getListaProgettoFormativo().get(i).isFirma_Azienda()) {
+										if (lista.getListaProgettoFormativo().get(i)
+												.isFirma_Presidente_Consiglio_Didattico() == false) {
 					%>
 					<tr>
 						<th><%=lista.getListaProgettoFormativo().get(i).getNome()%></th>
@@ -80,20 +86,24 @@ td, th {
 
 					</tr>
 					<%
-						} else {
+						}
+									} else {
 					%>
 					<tr>
 						<th>Nessun Studente</th>
 					</tr>
 					<%
 						}
-							} else {
+								} else {
 					%>
 					<tr>
 						<th>Nessun Studente</th>
 					</tr>
 					<%
 						}
+							}
+						} catch (Exception e) {
+							response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 						}
 					%>
 				</table>

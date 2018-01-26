@@ -16,7 +16,6 @@
 <script type="text/javascript" src="javaScript/visualizzaCampi.js"></script>
 <%@include file="includesPage/stylesheets.html"%>
 
-
 <style>
 table {
 	font-family: arial, sans-serif;
@@ -51,7 +50,9 @@ a:link, a:visited {
 
 </head>
 <body>
-
+	<%
+		try {
+	%>
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
 			style="margin-top: 10px">
@@ -68,7 +69,7 @@ a:link, a:visited {
 	<%
 		TutorAziendale tutor_Aziendale = (TutorAziendale) session.getAttribute("user");
 
-		ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+			ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
 	%>
 
 	<div
@@ -85,9 +86,10 @@ a:link, a:visited {
 					<%
 						for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
 
-							if (lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale()
-									.equalsIgnoreCase(tutor_Aziendale.getUsername())) {
-								if (lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Aziendale() == false) {
+								if (lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale()
+										.equalsIgnoreCase(tutor_Aziendale.getUsername())) {
+									if (lista.getListaProgettoFormativo().get(i).isFirma_Azienda()) {
+										if (lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Aziendale() == false) {
 					%>
 					<tr>
 						<th><%=lista.getListaProgettoFormativo().get(i).getNome()%></th>
@@ -101,21 +103,22 @@ a:link, a:visited {
 
 					</tr>
 					<%
-						} else {
+						}
+									} else {
 					%>
 					<tr>
 						<th>Nessun Studente</th>
 					</tr>
 					<%
 						}
-							} else {
+								} else {
 					%>
 					<tr>
 						<th>Nessun Studente</th>
 					</tr>
 					<%
 						}
-						}
+							}
 					%>
 				</table>
 
@@ -144,34 +147,38 @@ a:link, a:visited {
 
 			<%
 				ListaUtenti listaUtenti = (ListaUtenti) session.getAttribute("listaUtenti");
-				ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
+					ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
 
-				for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
-					if (tutor_Aziendale.getUsername()
-							.equalsIgnoreCase(lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale())) {
-						int id = lista.getListaProgettoFormativo().get(i).getId();
-						for (int y = 0; y < listaTirocini.getListaTirocini().size(); y++) {
-							if (id == listaTirocini.getListaTirocini().get(y).getId()) {
-								for (int z = 0; z < listaUtenti.getListaUtenti().size(); z++) {
-									if (id == listaUtenti.getListaUtenti().get(z).getUserId()) {
-										String iniziale = listaUtenti.getListaUtenti().get(z).getNome().substring(0, 1);
-										String finale = listaUtenti.getListaUtenti().get(z).getNome().substring(1,
-												listaUtenti.getListaUtenti().get(z).getNome().length());
-										String nom = iniziale.toUpperCase() + finale.toLowerCase();
+					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
+						if (tutor_Aziendale.getUsername().equalsIgnoreCase(
+								lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale())) {
+							int id = lista.getListaProgettoFormativo().get(i).getId();
+							for (int y = 0; y < listaTirocini.getListaTirocini().size(); y++) {
+								if (id == listaTirocini.getListaTirocini().get(y).getId()) {
+									for (int z = 0; z < listaUtenti.getListaUtenti().size(); z++) {
+										if (id == listaUtenti.getListaUtenti().get(z).getUserId()) {
+											String iniziale = listaUtenti.getListaUtenti().get(z).getNome().substring(0, 1);
+											String finale = listaUtenti.getListaUtenti().get(z).getNome().substring(1,
+													listaUtenti.getListaUtenti().get(z).getNome().length());
+											String nom = iniziale.toUpperCase() + finale.toLowerCase();
 
-										String inizial = listaUtenti.getListaUtenti().get(z).getCognome().substring(0, 1);
-										String fina = listaUtenti.getListaUtenti().get(z).getCognome().substring(1,
-												listaUtenti.getListaUtenti().get(z).getCognome().length());
-										String cognom = inizial.toUpperCase() + fina.toLowerCase();
+											String inizial = listaUtenti.getListaUtenti().get(z).getCognome().substring(0,
+													1);
+											String fina = listaUtenti.getListaUtenti().get(z).getCognome().substring(1,
+													listaUtenti.getListaUtenti().get(z).getCognome().length());
+											String cognom = inizial.toUpperCase() + fina.toLowerCase();
 			%>
 			<a style="border: 3px solid; margin-top: 20px; margin-right: 20px;"
 				href="firmaPresenze.jsp?id_studente=<%=listaUtenti.getListaUtenti().get(z).getUserId()%>"><%=nom + " " + cognom%></a>
 			<%
 				}
+									}
 								}
 							}
 						}
 					}
+				} catch (Exception e) {
+					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 				}
 			%>
 		</div>

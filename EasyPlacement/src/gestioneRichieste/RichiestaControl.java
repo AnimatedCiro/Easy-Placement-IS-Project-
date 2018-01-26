@@ -1,4 +1,4 @@
-package control;
+package gestioneRichieste;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -98,7 +98,7 @@ public class RichiestaControl extends HttpServlet {
 		String dataInizio= request.getParameter("inizio");
 		String dataFine = request.getParameter("fine");
 		String sede = request.getParameter("sede");
-		
+
 		idStudenteInt = Integer.parseInt(idStudente);
 
 		numeroCFUInt = Integer.parseInt(numeroCFU);
@@ -207,7 +207,7 @@ public class RichiestaControl extends HttpServlet {
 					+ "`Sede`"
 					+ " )"
 					+ "VALUES ("
-					+ "?,?,?,?,?,?,,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
+					+ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
 					+ ");";
 			PreparedStatement psmt = c.prepareStatement(insertPF);
 			psmt.setInt(1, idStudenteInt);
@@ -245,7 +245,7 @@ public class RichiestaControl extends HttpServlet {
 			psmt.setString(31, dataInizio);
 			psmt.setString(32, dataFine);
 			psmt.setString(33, sede);
-			
+
 			psmt.executeUpdate();
 			psmt.close();
 
@@ -260,7 +260,7 @@ public class RichiestaControl extends HttpServlet {
 					+ "VALUES ("
 					+ "?,?,?,?,?,?"
 					+ ");";
-			
+
 			psmt = c.prepareStatement(insertRichiesta);
 			psmt.setInt(1, idStudenteInt);
 			psmt.setBoolean(2, false);
@@ -277,7 +277,7 @@ public class RichiestaControl extends HttpServlet {
 		} catch (Exception ex) {
 
 			ex.printStackTrace();
-
+			System.out.println("caccapipi");
 			if(ex.getMessage().equals("Duplicate entry '"+idStudenteInt+"' for key 'PRIMARY'")) {
 
 				String messageDetail = "Torna indietro";

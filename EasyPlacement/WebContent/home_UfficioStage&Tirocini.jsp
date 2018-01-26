@@ -33,7 +33,9 @@ td, th {
 
 </head>
 <body>
-
+	<%
+		try {
+	%>
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
 			style="margin-top: 10px">
@@ -134,6 +136,9 @@ td, th {
 
 
 			<%
+				}
+				} catch (Exception e) {
+					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 				}
 			%>
 

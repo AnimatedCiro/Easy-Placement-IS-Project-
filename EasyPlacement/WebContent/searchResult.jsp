@@ -39,6 +39,11 @@ td, th {
 
 </head>
 <body>
+
+	<%
+		try {
+	%>
+
 	<div style="margin-top: 0px;">
 		<ul>
 			<li style="border: 3px solid;" id="nomeUtenteLoggato"><a
@@ -61,8 +66,8 @@ td, th {
 				<%
 					ListaAziende listaAziende = (ListaAziende) session.getAttribute("ricercaAzienda");
 
-					String azienda = (String) session.getAttribute("campoRicerca");
-					if (listaAziende.getListaAziende().isEmpty()) {
+						String azienda = (String) session.getAttribute("campoRicerca");
+						if (listaAziende.getListaAziende().isEmpty()) {
 				%>
 
 				<h3 style="color: red;" align="center">Nessuna azienda trovata</h3>
@@ -94,6 +99,9 @@ td, th {
 					</tr>
 					<%
 						}
+							}
+						} catch (Exception e) {
+							response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 						}
 					%>
 				</table>

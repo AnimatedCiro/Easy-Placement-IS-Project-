@@ -77,54 +77,55 @@ label {
 <body>
 
 	<%
-		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
-		String dataStr2 = sdf2.format(new Date().getTime());
+		try {
+			SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+			String dataStr2 = sdf2.format(new Date().getTime());
 
-		ListaAziende listaAziende = (ListaAziende) session.getAttribute("listaAziende");
-		Studente studente = (Studente) session.getAttribute("user");
+			ListaAziende listaAziende = (ListaAziende) session.getAttribute("listaAziende");
+			Studente studente = (Studente) session.getAttribute("user");
 
-		String inizio = "", fine = "";
-		String sede = "";
+			String inizio = "", fine = "";
+			String sede = "";
 
-		for (int i = 0; i < listaAziende.getListaAziende().size(); i++) {
-			if (request.getParameter("nomeAzienda")
-					.equalsIgnoreCase(listaAziende.getListaAziende().get(i).getNome())) {
+			for (int i = 0; i < listaAziende.getListaAziende().size(); i++) {
+				if (request.getParameter("nomeAzienda")
+						.equalsIgnoreCase(listaAziende.getListaAziende().get(i).getNome())) {
 
-				inizio = listaAziende.getListaAziende().get(i).getInizioTirocinio();
-				fine = listaAziende.getListaAziende().get(i).getFineTirocinio();
-				sede = listaAziende.getListaAziende().get(i).getSede();
+					inizio = listaAziende.getListaAziende().get(i).getInizioTirocinio();
+					fine = listaAziende.getListaAziende().get(i).getFineTirocinio();
+					sede = listaAziende.getListaAziende().get(i).getSede();
+				}
 			}
-		}
 
-		String nomeTA = "", cognomeTA = "", telefonoTA = "", emailTA = "";
-		ConnessioneDB con = new ConnessioneDB();
-		Connection c = con.getConnection();
-		String sqlTutorAZIENDALE = "SELECT * FROM  `TUTOR AZIENDALE` WHERE `Nome_azienda` = " + "'"
-				+ request.getParameter("nomeAzienda") + "'";
+			String nomeTA = "", cognomeTA = "", telefonoTA = "", emailTA = "";
+			ConnessioneDB con = new ConnessioneDB();
+			Connection c = con.getConnection();
+			String sqlTutorAZIENDALE = "SELECT * FROM  `TUTOR AZIENDALE` WHERE `Nome_azienda` = " + "'"
+					+ request.getParameter("nomeAzienda") + "'";
 
-		Statement st = c.createStatement();
-		ResultSet rsAzienda = st.executeQuery(sqlTutorAZIENDALE);
-		while (rsAzienda.next()) {
-			nomeTA = rsAzienda.getString("Nome");
-			cognomeTA = rsAzienda.getString("Cognome");
-			telefonoTA = rsAzienda.getString("Numero_Telefonico");
-			emailTA = rsAzienda.getString("Email");
-		}
-		rsAzienda.close();
-		st.close();
+			Statement st = c.createStatement();
+			ResultSet rsAzienda = st.executeQuery(sqlTutorAZIENDALE);
+			while (rsAzienda.next()) {
+				nomeTA = rsAzienda.getString("Nome");
+				cognomeTA = rsAzienda.getString("Cognome");
+				telefonoTA = rsAzienda.getString("Numero_Telefonico");
+				emailTA = rsAzienda.getString("Email");
+			}
+			rsAzienda.close();
+			st.close();
 
-		String nomeTAC = "", cognomeTAC = "";
-		String sqlTutorAccademico = "SELECT * FROM  `TUTOR ACCADEMICO`";
+			String nomeTAC = "", cognomeTAC = "";
+			String sqlTutorAccademico = "SELECT * FROM  `TUTOR ACCADEMICO`";
 
-		st = c.createStatement();
-		rsAzienda = st.executeQuery(sqlTutorAccademico);
-		while (rsAzienda.next()) {
-			nomeTAC = rsAzienda.getString("Nome");
-			cognomeTAC = rsAzienda.getString("Cognome");
-		}
-		rsAzienda.close();
-		st.close();
-		c.close();
+			st = c.createStatement();
+			rsAzienda = st.executeQuery(sqlTutorAccademico);
+			while (rsAzienda.next()) {
+				nomeTAC = rsAzienda.getString("Nome");
+				cognomeTAC = rsAzienda.getString("Cognome");
+			}
+			rsAzienda.close();
+			st.close();
+			c.close();
 	%>
 
 
@@ -534,6 +535,11 @@ label {
 			</div>
 		</div>
 	</div>
+	<%
+		} catch (Exception e) {
+			response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+		}
+	%>
 
 </body>
 </html>

@@ -1,3 +1,4 @@
+<%@page import="bean.ListaRegistro"%>
 <%@page import="bean.Studente"%>
 <%@page import="bean.ListaTirocini"%>
 <%@page import="bean.Azienda"%>
@@ -29,10 +30,107 @@ td, th {
 	padding: 8px;
 	background-color: white;
 }
+
+label {
+	display: unset;
+	color: #fff;
+	cursor: pointer;
+	position: relative;
+}
+
+label .check-box-effect {
+	display: inline-block;
+	position: relative;
+	background-color: red;
+	width: 25px;
+	height: 25px;
+	border: 2px solid #dcdcdc;
+	border-radius: 10%;
+}
+
+label .check-box-effect:before {
+	content: "";
+	width: 0px;
+	height: 2px;
+	border-radius: 2px;
+	background: #626262;
+	position: absolute;
+	transform: rotate(45deg);
+	top: 13px;
+	left: 9px;
+	transition: width 50ms ease 50ms;
+	transform-origin: 0% 0%;
+}
+
+label .check-box-effect:after {
+	content: "";
+	width: 0;
+	height: 2px;
+	border-radius: 2px;
+	background: #626262;
+	position: absolute;
+	transform: rotate(305deg);
+	top: 16px;
+	left: 10px;
+	transition: width 50ms ease;
+	transform-origin: 0% 0%;
+}
+
+label:hover .check-box-effect:before {
+	width: 5px;
+	transition: width 100ms ease;
+}
+
+label:hover .check-box-effect:after {
+	width: 10px;
+	transition: width 150ms ease 100ms;
+}
+
+input[type="checkbox"] {
+	display: none;
+}
+
+input[type="checkbox"]:checked+.check-box-effect {
+	background-color: green !important;
+	transform: scale(1.25);
+}
+
+input[type="checkbox"]:checked+.check-box-effect:after {
+	width: 10px;
+	background: #333;
+	transition: width 150ms ease 100ms;
+}
+
+input[type="checkbox"]:checked+.check-box-effect:before {
+	width: 5px;
+	background: #333;
+	transition: width 150ms ease 100ms;
+}
+
+input[type="checkbox"]:checked:hover+.check-box-effect {
+	background-color: #dcdcdc;
+	transform: scale(1.25);
+}
+
+input[type="checkbox"]:checked:hover+.check-box-effect:after {
+	width: 10px;
+	background: #333;
+	transition: width 150ms ease 100ms;
+}
+
+input[type="checkbox"]:checked:hover+.check-box-effect:before {
+	width: 5px;
+	background: #333;
+	transition: width 150ms ease 100ms;
+}
 </style>
 
 </head>
 <body>
+
+	<%
+		try {
+	%>
 
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
@@ -50,14 +148,14 @@ td, th {
 
 	<%
 		Studente studente1 = (Studente) session.getAttribute("user");
-		ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
-		String a = "";
+			ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
+			String a = "";
 
-		for (int i = 0; i < listaTirocini.getListaTirocini().size(); i++) {
-			if (listaTirocini.getListaTirocini().get(i).getId() == studente1.getUserId()) {
-				a = "Tirocinio Approvato";
+			for (int i = 0; i < listaTirocini.getListaTirocini().size(); i++) {
+				if (listaTirocini.getListaTirocini().get(i).getId() == studente1.getUserId()) {
+					a = "Tirocinio Approvato";
+				}
 			}
-		}
 	%>
 
 
@@ -79,7 +177,7 @@ td, th {
 			<%
 				} else
 
-				{
+					{
 			%>
 
 
@@ -105,10 +203,10 @@ td, th {
 					<%
 						if (session.getAttribute("listaAziende") == null) {
 
-							} else {
+								} else {
 
-								ListaAziende listaAziende = (ListaAziende) session.getAttribute("listaAziende");
-								for (int i = 0; i < listaAziende.getListaAziende().size(); i++) {
+									ListaAziende listaAziende = (ListaAziende) session.getAttribute("listaAziende");
+									for (int i = 0; i < listaAziende.getListaAziende().size(); i++) {
 					%>
 
 					<tr>
@@ -123,7 +221,7 @@ td, th {
 					</tr>
 					<%
 						}
-							}
+								}
 					%>
 				</table>
 			</div>
@@ -137,7 +235,31 @@ td, th {
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
 
-			<h1>CONSULTA REGISTRO ANCORA NON PRONTO</h1>
+
+			<div class="panel-heading">
+				<h2
+					style="color: #ff8221; size: 100px; font-family: sans-serif; margin-bottom: 20px;">Registro</h2>
+			</div>
+
+			<%
+				ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
+
+					for (int i = 0; i < registro.getListaRegistro().size(); i++) {
+			%>
+			<form style="margin-top: 10px;">
+				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
+					style="left: 100px;"><input type="checkbox"
+					checked="checked" disabled="disabled" "
+						id="chkProdTomove" />
+					<span class="check-box-effect"></span> </label>
+			</form>
+
+			<%
+				}
+				} catch (Exception e) {
+					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+				}
+			%>
 
 		</div>
 
