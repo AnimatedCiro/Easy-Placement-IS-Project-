@@ -2,6 +2,8 @@ package gestioneAccount;
 
 import database.ConnessioneDB;
 import bean.Studente;
+import bean.Tirocinio;
+
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import bean.Azienda;
 import bean.ListaAziende;
+import bean.ListaTirocini;
 
 import java.sql.*;
 
@@ -91,10 +94,32 @@ public class RegistraControl extends HttpServlet {
 
 
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
+		
+		ListaTirocini listaTirocini = new ListaTirocini();
+		try {
+			ConnessioneDB conn = new ConnessioneDB();
+			Connection c = conn.getConnection();
+			String sqlSelect = "SELECT"
+					+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente` ,`Completato` FROM  `TIROCINIO`; ";
 
+			Statement st = c.createStatement();
+			ResultSet rs = st.executeQuery(sqlSelect);
 
+			while (rs.next()) {
+				Tirocinio tirocinio = new Tirocinio();
+				tirocinio.setId(rs.getInt("Id_Progetto_Formativo"));
+				tirocinio.setDataFine(rs.getString("Data_Fine"));
+				tirocinio.setEmailStudente(rs.getString("Email_Studente"));
+				tirocinio.setSede(rs.getString("Sede"));
+				tirocinio.setCompletato(rs.getBoolean("Completato"));
+				listaTirocini.addTirocinio(tirocinio);
+			}
+			userSession.setAttribute("listaTirocini", listaTirocini);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 
 
 		try {

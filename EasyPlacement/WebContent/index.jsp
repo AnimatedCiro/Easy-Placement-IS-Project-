@@ -8,7 +8,7 @@
 </head>
 <body>
 	<%
-		try {
+		
 			if (session.getAttribute("user") == null) {
 	%>
 	<jsp:include page="includesPage/login.html"></jsp:include>
@@ -17,9 +17,6 @@
 	%>
 	<jsp:include page="includesPage/logout.jsp"></jsp:include>
 	<%
-		}
-		} catch (Exception e) {
-			response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 		}
 	%>
 </body>

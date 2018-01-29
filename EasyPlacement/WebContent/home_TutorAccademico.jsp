@@ -31,9 +31,7 @@ td, th {
 
 </head>
 <body>
-	<%
-		try {
-	%>
+
 
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
@@ -42,13 +40,15 @@ td, th {
 	<div style="position: absolute;" id="leftside">
 		<ul id="leftsideNav">
 			<li class=richiestaStudente>Convalida Documento</li>
-			<li class=consultaRegistro>Compila Questionario</li>
+			<li class=progettoFormativo>Consulta Registro</li>
 		</ul>
 	</div>
 
 
 	<%
-		TutorAccademico tutor_Accademico = (TutorAccademico) session.getAttribute("user");
+		try {
+
+			TutorAccademico tutor_Accademico = (TutorAccademico) session.getAttribute("user");
 
 			ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
 	%>
@@ -88,22 +88,15 @@ td, th {
 						}
 									} else {
 					%>
-					<tr>
-						<th>Nessun Studente</th>
-					</tr>
+					
 					<%
 						}
 								} else {
 					%>
-					<tr>
-						<th>Nessun Studente</th>
-					</tr>
+					
 					<%
 						}
 							}
-						} catch (Exception e) {
-							response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
-						}
 					%>
 				</table>
 
@@ -111,18 +104,44 @@ td, th {
 
 		</form>
 
-
-		<div id="consultaRegistro"
+		<div id="progettoFormativo"
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
 
-			<h1>COMPILA QUESTIONARIO ANCORA NON PRONTO</h1>
+
+			<div class="panel-heading">
+				<h2
+					style="color: #ff8221; size: 100px; font-family: sans-serif; margin-bottom: 20px;">Consulta
+					Registro di:</h2>
+			</div>
+
+			<%
+				ListaProgettiFormativi lisaPF = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+
+					for (int i = 0; i < lisaPF.getListaProgettoFormativo().size(); i++) {
+						if (tutor_Accademico.getUsername().equalsIgnoreCase(
+								lisaPF.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Accademico())) {
+			%>
+
+			<a
+				href="consultaRegistro.jsp?uid=<%=lisaPF.getListaProgettoFormativo().get(i).getId()%>"
+				style="background-color: #ff8221; color: black; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border: 3px solid;"><%=lisaPF.getListaProgettoFormativo().get(i).getNome() + "  "
+								+ lisaPF.getListaProgettoFormativo().get(i).getCognome()%></a>
+
+
+			<%
+				}
+					}
+			%>
 
 		</div>
 
-
-
-	</div>
+		<%
+			} catch (Exception e) {
+				response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+			}
+		%>
+	
 </body>
 </html>
 

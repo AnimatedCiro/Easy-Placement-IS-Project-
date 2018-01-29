@@ -50,9 +50,7 @@ a:link, a:visited {
 
 </head>
 <body>
-	<%
-		try {
-	%>
+
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
 			style="margin-top: 10px">
@@ -62,13 +60,16 @@ a:link, a:visited {
 			<li class=richiestaStudente>Convalida Documento</li>
 			<li class=consultaRegistro>Compila Questionario</li>
 			<li class=compilaModuli>Firma Presenze</li>
+			<li class=progettoFormativo>Consulta Registro</li>
 		</ul>
 	</div>
 
 
 	<%
-		TutorAziendale tutor_Aziendale = (TutorAziendale) session.getAttribute("user");
+		try {
 
+			TutorAziendale tutor_Aziendale = (TutorAziendale) session.getAttribute("user");
+			ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
 			ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
 	%>
 
@@ -106,16 +107,12 @@ a:link, a:visited {
 						}
 									} else {
 					%>
-					<tr>
-						<th>Nessun Studente</th>
-					</tr>
+					
 					<%
 						}
 								} else {
 					%>
-					<tr>
-						<th>Nessun Studente</th>
-					</tr>
+					
 					<%
 						}
 							}
@@ -132,7 +129,34 @@ a:link, a:visited {
 			class="row">
 
 
-			<h1>COMPILA QUESTIONARIO ANCORA NON PRONTO</h1>
+			<%
+				int o = 0;
+					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
+						if (lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale()
+								.equalsIgnoreCase(tutor_Aziendale.getUsername())) {
+							for (int x = 0; x < listaTirocini.getListaTirocini().size(); x++) {
+								if (lista.getListaProgettoFormativo().get(i).getId() == listaTirocini.getListaTirocini()
+										.get(x).getId() && listaTirocini.getListaTirocini().get(x).isCompletato() == true) {
+									o = 1;
+			%>
+
+			<a href="questionarioAzienda.jsp">Vai a compila questionario</a>
+
+			<%
+				}
+							}
+						}
+					}
+			%>
+
+			<%
+				if (o == 0) {
+			%>
+			<h1>Non è possibile accedere al questionario</h1>
+			<h5>Tirocinio non completato</h5>
+			<%
+				}
+			%>
 
 		</div>
 
@@ -147,14 +171,14 @@ a:link, a:visited {
 
 			<%
 				ListaUtenti listaUtenti = (ListaUtenti) session.getAttribute("listaUtenti");
-					ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
+					ListaTirocini listaTirocini2 = (ListaTirocini) session.getAttribute("listaTirocini");
 
 					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
 						if (tutor_Aziendale.getUsername().equalsIgnoreCase(
 								lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale())) {
 							int id = lista.getListaProgettoFormativo().get(i).getId();
-							for (int y = 0; y < listaTirocini.getListaTirocini().size(); y++) {
-								if (id == listaTirocini.getListaTirocini().get(y).getId()) {
+							for (int y = 0; y < listaTirocini2.getListaTirocini().size(); y++) {
+								if (id == listaTirocini2.getListaTirocini().get(y).getId()) {
 									for (int z = 0; z < listaUtenti.getListaUtenti().size(); z++) {
 										if (id == listaUtenti.getListaUtenti().get(z).getUserId()) {
 											String iniziale = listaUtenti.getListaUtenti().get(z).getNome().substring(0, 1);
@@ -177,11 +201,51 @@ a:link, a:visited {
 							}
 						}
 					}
-				} catch (Exception e) {
-					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
-				}
 			%>
 		</div>
+
+
+		<div id="progettoFormativo"
+			style="position: absolute; top: 50px; height: 100%; width: 100%;"
+			class="row">
+
+
+			<div class="panel-heading">
+				<h2
+					style="color: #ff8221; size: 100px; font-family: sans-serif; margin-bottom: 20px;">Consulta
+					Registro di:</h2>
+			</div>
+
+			<%
+				ListaProgettiFormativi lisaPF = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+
+					for (int i = 0; i < lisaPF.getListaProgettoFormativo().size(); i++) {
+						if (tutor_Aziendale.getUsername().equalsIgnoreCase(
+								lisaPF.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale())) {
+			%>
+
+			<a
+				href="consultaRegistro.jsp?uid=<%=lisaPF.getListaProgettoFormativo().get(i).getId()%>"
+				style="background-color: #ff8221; color: black; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border: 3px solid;"><%=lisaPF.getListaProgettoFormativo().get(i).getNome() + "  "
+								+ lisaPF.getListaProgettoFormativo().get(i).getCognome()%></a>
+
+
+			<%
+				}
+					}
+			%>
+
+		</div>
+
+
+
+		<%
+			} catch (Exception e) {
+				response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+			}
+		%>
+
+
 	</div>
 </body>
 </html>

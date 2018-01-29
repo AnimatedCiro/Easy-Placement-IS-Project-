@@ -33,9 +33,7 @@ body {
 <body>
 
 
-	<%
-		session.invalidate();
-	%>
+	
 
 	<div class="container">
 		<div class="row">

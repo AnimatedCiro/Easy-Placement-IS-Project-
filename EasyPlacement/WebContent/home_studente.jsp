@@ -1,3 +1,4 @@
+<%@page import="bean.ListaProgettiFormativi"%>
 <%@page import="bean.ListaRegistro"%>
 <%@page import="bean.Studente"%>
 <%@page import="bean.ListaTirocini"%>
@@ -128,9 +129,7 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 </head>
 <body>
 
-	<%
-		try {
-	%>
+
 
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
@@ -141,22 +140,9 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			<li class=richiestaStudente>Richiesta Studente</li>
 			<li class=consultaRegistro>Consulta Registro</li>
 			<li class=compilaModuli>Compila questionario</li>
-			<li class=progettoFormativo>(DA TOGLIERE)Progetto Formativo</li>
+			<li class=progettoFormativo>Progetto Formativo</li>
 		</ul>
 	</div>
-
-
-	<%
-		Studente studente1 = (Studente) session.getAttribute("user");
-			ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
-			String a = "";
-
-			for (int i = 0; i < listaTirocini.getListaTirocini().size(); i++) {
-				if (listaTirocini.getListaTirocini().get(i).getId() == studente1.getUserId()) {
-					a = "Tirocinio Approvato";
-				}
-			}
-	%>
 
 
 
@@ -168,9 +154,20 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
 
-
 			<%
-				if (a.equalsIgnoreCase("Tirocinio Approvato")) {
+				try {
+
+					Studente studente1 = (Studente) session.getAttribute("user");
+					ListaTirocini listaTirocini = (ListaTirocini) session.getAttribute("listaTirocini");
+					String a = "";
+
+					for (int i = 0; i < listaTirocini.getListaTirocini().size(); i++) {
+						if (listaTirocini.getListaTirocini().get(i).getId() == studente1.getUserId()) {
+							a = "Tirocinio Approvato";
+						}
+					}
+
+					if (a.equalsIgnoreCase("Tirocinio Approvato")) {
 			%>
 
 			<h1><%=a%></h1>
@@ -226,11 +223,11 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 				</table>
 			</div>
 
-
 			<%
 				}
 			%>
 		</div>
+
 		<div id="consultaRegistro"
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
@@ -249,15 +246,12 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			<form style="margin-top: 10px;">
 				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
 					style="left: 100px;"><input type="checkbox"
-					checked="checked" disabled="disabled" "
+					checked="checked" disabled="disabled" 
 						id="chkProdTomove" />
 					<span class="check-box-effect"></span> </label>
 			</form>
 
 			<%
-				}
-				} catch (Exception e) {
-					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 				}
 			%>
 
@@ -267,18 +261,130 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
 
-			<h1>COMPILA QUESTIONARIO ANCORA NON PRONTO</h1>
+			<%
+				int o = 0;
+					for (int x = 0; x < listaTirocini.getListaTirocini().size(); x++) {
+						if (listaTirocini.getListaTirocini().get(x).getId() == studente1.getUserId()
+								&& listaTirocini.getListaTirocini().get(x).isCompletato() == true) {
+							o = 1;
+			%>
+			<a href="questionarioStudente.jsp"> Vai al Questionario</a>
+			<%
+				}
+					}
+			%>
 
+			<%
+				if (o == 0) {
+			%>
+			<h1>Non è possibile accedere al questionario</h1>
+			<h5>Tirocinio non completato</h5>
+			<%
+				}
+			%>
 		</div>
 
 		<div id="progettoFormativo"
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
+			<div id="progettoFormativo"
+				style="position: absolute; top: 50px; height: 100%; width: 100%;"
+				class="row">
+				<%
+					String aaa = "", bbb = "", ccc = "";
+						String TA = "";
 
-			<h1>PROGETTO FORMATIVO ANCORA NON PRONTO</h1>
+						ListaProgettiFormativi listapf = (ListaProgettiFormativi) session
+								.getAttribute("listaprogettiFormativi");
+						for (int i = 0; i < listapf.getListaProgettoFormativo().size(); i++) {
+							if (listapf.getListaProgettoFormativo().get(i).getId() == studente1.getUserId()) {
+								if (listapf.getListaProgettoFormativo().get(i).getInpossessodiLaurea().equalsIgnoreCase("1")) {
+									bbb = "Triennale";
+								} else {
+									bbb = "Magistrale";
+								}
+								if (listapf.getListaProgettoFormativo().get(i).isPortatoreHandicap() == true) {
+									ccc = "Si";
+								} else {
+									ccc = "No";
+								}
+								if (listapf.getListaProgettoFormativo().get(i).isOpzione() == false) {
+									if (listapf.getListaProgettoFormativo().get(i).isTipoLaurea() == false) {
+										aaa = "Triennale";
+									} else {
+										aaa = "Magistrale";
+									}
+				%>
 
+				<p>
+					Studente universitario iscritto al
+					<%=listapf.getListaProgettoFormativo().get(i).getIscrittoAl()%>,
+					anno del Corso di Laure
+					<%=listapf.getListaProgettoFormativo().get(i).getAnnoCorsoLaurea()%>
+					in Informatica, matricola
+					<%=listapf.getListaProgettoFormativo().get(i).getMatricola()%>,presso
+					l'Università degli studi di Salerno per l'anno accademico
+					<%=listapf.getListaProgettoFormativo().get(i).getAnnoAccademico()%>,con
+					tirocinio curricolare pari a
+					<%=listapf.getListaProgettoFormativo().get(i).getNumeroCFU()%>
+					CFU
+				</p>
+
+				<%
+					} else {
+				%>
+
+				<p>
+					In possesso di laurea
+					<%=a%>
+					in Informatica conseguita presso l'Università degli studi di
+					Salerno in data
+					<%=listapf.getListaProgettoFormativo().get(i).getDataConseguimentoLaurea()%>
+
+				</p>
+
+				<%
+					}
+				%>
+				<p><%="Tipo laurea  :    " + bbb%></p>
+				<p><%="Portatore Handicap  :    " + ccc%></p>
+				<p><%="Sede Azienda  :    " + listapf.getListaProgettoFormativo().get(i).getSede()%></p>
+				<p><%="Periodo di Tirocinio  :   N°Mesi 6 Dal    "
+								+ listapf.getListaProgettoFormativo().get(i).getDataInizio() + " al "
+								+ listapf.getListaProgettoFormativo().get(i).getDataFine()%></p>
+				<p><%="Tutor Aziendale  :    "
+								+ listapf.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale()%></p>
+				<p>Tutor Accademico : Donatello Botta</p>
+				<p>Obblighi per il tirocinante:</p>
+
+				<p>&lowast; Seguire le indicazioni dei tutori e fare riferimento
+					ad essi su qualsiasi Esigenza di tipo organizzativo ed altre
+					evenienze;</p>
+
+				<p>&lowast; Rispettare gli obblighi di riservatezza per quanto
+					attiene ai dati, alle Informazioni e conoscenze in merito
+					all’attività di ricerca dell’ Ente/Azienda, acquisiti durante e
+					dopo lo svolgimento del tirocinio;</p>
+
+				<p>&lowast; Rispettare i regolamenti aziendali e le norme in
+					materia di igiene e sicurezza.</p>
+
+
+				<%
+					}
+
+						}
+				%>
+
+			</div>
 		</div>
+
 	</div>
+	<%
+		} catch (Exception e) {
+			response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+		}
+	%>
 </body>
 </html>
 

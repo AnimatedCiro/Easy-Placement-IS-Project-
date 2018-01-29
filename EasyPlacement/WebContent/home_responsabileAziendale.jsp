@@ -1,3 +1,5 @@
+<%@page import="bean.ListaProgettiFormativi"%>
+<%@page import="bean.ListaRegistro"%>
 <%@page import="bean.ResponsabileAziendale"%>
 <%@page import="bean.ListaRichieste"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -33,9 +35,7 @@ td, th {
 </head>
 <body>
 
-	<%
-		try {
-	%>
+
 
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
@@ -45,13 +45,15 @@ td, th {
 	<div style="position: absolute;" id="leftside">
 		<ul id="leftsideNav">
 			<li class=richiestaStudente>Convalida Documento</li>
-			<li class=compilaModuli>Compila questionario</li>
+			<li class=consultaRegistro>Consulta Registro</li>
 		</ul>
 	</div>
 
 
 	<%
-		ListaRichieste listaRichieste = (ListaRichieste) session.getAttribute("listaRichieste");
+		try {
+
+			ListaRichieste listaRichieste = (ListaRichieste) session.getAttribute("listaRichieste");
 			ResponsabileAziendale responsabileAziendale = (ResponsabileAziendale) session.getAttribute("user");
 			String matricola;
 	%>
@@ -61,7 +63,7 @@ td, th {
 	<div
 		style="position: absolute; top: 150px; left: 250px; width: 76%; height: auto;"
 		id="leftside">
-
+		<a href="consultaRegistro.jsp">ddsadasd</a>
 		<form action="AccettaRifiutaRichiesta" method="post"
 			name="accettarifiutarichiesta">
 			<div id="formRicerca"
@@ -107,44 +109,60 @@ td, th {
 						}
 								} else {
 					%>
-					<tr>
-						<th>Nessuna Richiesta</th>
-					</tr>
+
 					<%
 						}
 							}
-						} catch (Exception e) {
-							response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
-						}
 					%>
 				</table>
 			</div>
 		</form>
 
-
-		<div id="compilaModuli"
+		<div id="consultaRegistro"
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">
 
 
-			<h1>COMPILA QUESTIONARIO ANCORA NON PRONTO</h1>
+			<div class="panel-heading">
+				<h2
+					style="color: #ff8221; size: 100px; font-family: sans-serif; margin-bottom: 20px;">Consulta
+					Registro di:</h2>
+			</div>
+
+			<%
+				ListaProgettiFormativi lisaPF = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+
+					for (int i = 0; i < lisaPF.getListaProgettoFormativo().size(); i++) {
+						if (lisaPF.getListaProgettoFormativo().get(i).getNome_Utente_Responsabile_Aziendale()
+								.equalsIgnoreCase(responsabileAziendale.getUsername())) {
+							String a = "" + lisaPF.getListaProgettoFormativo().get(i).getId();
+			%>
+
+			<a
+				href="consultaRegistro.jsp?uid=<%=lisaPF.getListaProgettoFormativo().get(i).getId()%>"
+				style="background-color: #ff8221; color: black; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border: 3px solid;"><%=lisaPF.getListaProgettoFormativo().get(i).getNome() + "  "
+								+ lisaPF.getListaProgettoFormativo().get(i).getCognome()%></a>
+
+
+			<%
+				}
+					}
+			%>
 
 		</div>
 
+
+		<%
+			} catch (Exception e) {
+				System.out.print(e.getMessage());
+				response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+			}
+		%>
+
+
+
+
+
 	</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>

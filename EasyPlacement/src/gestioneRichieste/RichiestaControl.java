@@ -277,7 +277,6 @@ public class RichiestaControl extends HttpServlet {
 		} catch (Exception ex) {
 
 			ex.printStackTrace();
-			System.out.println("caccapipi");
 			if(ex.getMessage().equals("Duplicate entry '"+idStudenteInt+"' for key 'PRIMARY'")) {
 
 				String messageDetail = "Torna indietro";

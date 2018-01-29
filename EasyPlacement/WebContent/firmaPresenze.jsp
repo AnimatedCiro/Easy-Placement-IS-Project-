@@ -136,9 +136,7 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 </head>
 <body>
 
-	<%
-		try {
-	%>
+
 
 	<div style="margin-top: 0px;">
 		<ul>
@@ -165,9 +163,10 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 					presenza studente</h2>
 			</div>
 
-
 			<%
-				ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
+				try {
+
+					ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
 
 					if (registro.getListaRegistro().size() > 3) {
 

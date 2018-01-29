@@ -62,8 +62,8 @@ public class ModificaAccount extends HttpServlet {
 			PreparedStatement psmt = c.prepareStatement(updateRichiesta);
 			psmt.setString(1, username);
 			psmt.setString(2, email1);
-			psmt.setString(3, numTelefono);
-			psmt.setString(4, password);
+			psmt.setString(3, password);
+			psmt.setString(4, numTelefono);
 
 			psmt.executeUpdate();
 

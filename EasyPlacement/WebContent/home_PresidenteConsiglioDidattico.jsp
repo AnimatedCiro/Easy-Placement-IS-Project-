@@ -1,3 +1,4 @@
+<%@page import="bean.ListaRegistro"%>
 <%@page import="bean.PresidenteConsiglioDidattico"%>
 <%@page import="bean.ListaProgettiFormativi"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -31,9 +32,7 @@ td, th {
 
 </head>
 <body>
-	<%
-		try {
-	%>
+
 
 	<div id="containerLogo" style="margin-top: 5px; width: 100px">
 		<img alt="logo" src="logo/logo2.png" width="200" height="200"
@@ -42,12 +41,15 @@ td, th {
 	<div style="position: absolute;" id="leftside">
 		<ul id="leftsideNav">
 			<li class=richiestaStudente>Convalida Documento</li>
+			<li class=consultaRegistro>Convalida finale Tirocinio</li>
 		</ul>
 	</div>
 
 
 	<%
-		PresidenteConsiglioDidattico presidentePCD = (PresidenteConsiglioDidattico) session
+		try {
+
+			PresidenteConsiglioDidattico presidentePCD = (PresidenteConsiglioDidattico) session
 					.getAttribute("user");
 
 			ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
@@ -56,6 +58,7 @@ td, th {
 	<div
 		style="position: absolute; top: 100px; left: 250px; width: 76%; height: auto;"
 		id="leftside">
+
 		<form action="FirmaDocumento" method="post" name="firmadocumento">
 			<div id="formRicerca"
 				style="position: absolute; top: 50px; height: 100%; width: 100%;"
@@ -64,10 +67,6 @@ td, th {
 				<table class="table" style="position: absolute; top: 50px;">
 					<%
 						for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
-
-								System.out.println(lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale());
-								System.out.println(presidentePCD.getUsername());
-								System.out.println(lista.getListaProgettoFormativo().get(i).getId());
 
 								if (lista.getListaProgettoFormativo().size() != 0) {
 									if (lista.getListaProgettoFormativo().get(i).isFirma_Azienda()) {
@@ -89,26 +88,71 @@ td, th {
 						}
 									} else {
 					%>
-					<tr>
-						<th>Nessun Studente</th>
-					</tr>
+
 					<%
 						}
 								} else {
 					%>
-					<tr>
-						<th>Nessun Studente</th>
-					</tr>
+
 					<%
 						}
 							}
-						} catch (Exception e) {
-							response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
-						}
 					%>
 				</table>
 			</div>
 		</form>
+
+		<div id="consultaRegistro"
+			style="position: absolute; top: 50px; height: 100%; width: 100%;"
+			class="row">
+
+
+			<%
+				ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
+					int o = 0;
+					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
+						if (lista.getListaProgettoFormativo().get(i).isFirma_Azienda() == true
+								&& lista.getListaProgettoFormativo().get(i).isFirma_Presidente_Consiglio_Didattico() == true
+								&& lista.getListaProgettoFormativo().get(i).isFirma_Studente() == true
+								&& lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Accademico() == true
+								&& lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Aziendale() == true) {
+							for (int x = 0; x < registro.getListaRegistro().size(); x++) {
+								if (lista.getListaProgettoFormativo().get(i).getId() == registro.getListaRegistro().get(x)
+										.getId()
+										&& lista.getListaProgettoFormativo().get(i).getDataFine()
+												.equalsIgnoreCase(registro.getListaRegistro().get(x).getData())
+										&& registro.getListaRegistro().get(x).getIsFirmed() == false) {
+									o = 1;
+			%>
+
+			<form action="ConvalidaFinaleTirocinio" method="post"
+				name="convalidafinale">
+				<input style="display: none;" type="text" name="id"
+					value="<%=lista.getListaProgettoFormativo().get(i).getId()%>">
+				<label><%=lista.getListaProgettoFormativo().get(i).getNome()%></label>
+				<label><%=lista.getListaProgettoFormativo().get(i).getCognome()%></label>
+				<input style="cursor: pointer;" type="submit"
+					value="Convalida Tirocinio">
+			</form>
+
+			<%
+				}
+							}
+						}
+					}
+
+					if (o == 0) {
+			%>
+			<h1>Nessuno studente ha completato il tirocinio</h1>
+
+			<%
+				}
+				} catch (Exception e) {
+					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+				}
+			%>
+
+		</div>
 	</div>
 </body>
 </html>

@@ -59,8 +59,31 @@ public class LoginControl extends HttpServlet {
 
 		String message, messageDetail;
 
-		message = "Email non Esistente";
+		message = "Username non Esistente";
 		messageDetail = "Effettua la registrazione";
+
+
+		ListaRegistro listaRegistro = new ListaRegistro();
+
+		try {
+			ConnessioneDB conn = new ConnessioneDB();
+			Connection c = conn.getConnection();
+			String sqlSelect = "SELECT * FROM `REGISTRO`; ";
+			PreparedStatement st = c.prepareStatement(sqlSelect);
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				Registro registro = new Registro();
+				registro.setData(rs.getString("Data"));
+				registro.setIsFirmed(rs.getBoolean("Firma"));
+				registro.setId(rs.getInt("Id_Progetto_Formativo"));
+				listaRegistro.addRegistro(registro);
+			}
+			userSession.setAttribute("listaRegistro", listaRegistro);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
 
 		ListaTirocini listaTirocini = new ListaTirocini();
 
@@ -68,7 +91,7 @@ public class LoginControl extends HttpServlet {
 			ConnessioneDB conn = new ConnessioneDB();
 			Connection c = conn.getConnection();
 			String sqlSelect = "SELECT"
-					+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente` FROM  `TIROCINIO`; ";
+					+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente` ,`Completato` FROM  `TIROCINIO`; ";
 
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(sqlSelect);
@@ -79,6 +102,7 @@ public class LoginControl extends HttpServlet {
 				tirocinio.setDataFine(rs.getString("Data_Fine"));
 				tirocinio.setEmailStudente(rs.getString("Email_Studente"));
 				tirocinio.setSede(rs.getString("Sede"));
+				tirocinio.setCompletato(rs.getBoolean("Completato"));
 				listaTirocini.addTirocinio(tirocinio);
 			}
 			userSession.setAttribute("listaTirocini", listaTirocini);
@@ -410,7 +434,7 @@ public class LoginControl extends HttpServlet {
 					}
 				}
 
-				ListaRegistro listaRegistro = new ListaRegistro();
+				listaRegistro = new ListaRegistro();
 
 				try {
 					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
@@ -483,15 +507,44 @@ public class LoginControl extends HttpServlet {
 
 			else if (username.contains("presidenteConsiglioDidattico")) {
 
-				ConnessioneDB con = new ConnessioneDB();
-				Connection c = con.getConnection();
+				ConnessioneDB con;
+				Connection c;
+				PreparedStatement st;
+				ResultSet rs;
+
+				listaRegistro = new ListaRegistro();
+
+				try {
+					con = new ConnessioneDB();
+					c = con.getConnection();
+					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
+
+					st = c.prepareStatement(sqlSelect);
+					rs = st.executeQuery();
+					while (rs.next()) {
+						Registro registro = new Registro();
+						registro.setData(rs.getString("Data"));
+						registro.setIsFirmed(rs.getBoolean("Firma"));
+						registro.setId(rs.getInt("Id_Progetto_Formativo"));
+						listaRegistro.addRegistro(registro);
+					}
+					userSession.setAttribute("listaRegistro", listaRegistro);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+
+
+				con = new ConnessioneDB();
+				c = con.getConnection();
 				String sqlGetUsers;
 
 				sqlGetUsers = "SELECT  `Nome_Utente` ,  "
 						+ "`Password`,`Nome`,`Cognome` FROM  `PRESIDENTE CONSIGLIO DIDATTICO`; ";
 
-				PreparedStatement st = c.prepareStatement(sqlGetUsers);
-				ResultSet rs = st.executeQuery();
+				st = c.prepareStatement(sqlGetUsers);
+				rs = st.executeQuery();
+
 
 				while (rs.next()) {
 					String nome,cognome;
@@ -561,7 +614,7 @@ public class LoginControl extends HttpServlet {
 					e.printStackTrace();
 				}
 
-				ListaRegistro listaRegistro = new ListaRegistro();
+				listaRegistro = new ListaRegistro();
 
 				try {
 					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
@@ -590,14 +643,15 @@ public class LoginControl extends HttpServlet {
 							con = new ConnessioneDB();
 							c = con.getConnection();
 							String sql = "INSERT INTO  `TIROCINIO` "
-									+ "(`Email_Studente` ,`Id_Progetto_Formativo`,`Data_Inizio`,`Data_Fine`,`Sede` ) "
+									+ "(`Email_Studente` ,`Id_Progetto_Formativo`,`Data_Inizio`,`Data_Fine`,`Sede`,`Completato` ) "
 									+ "VALUES (?,?,?,?,?); ";
 							PreparedStatement psmt = c.prepareStatement(sql);
 							psmt.setString(1, listaprogettiFormativi.getListaProgettoFormativo().get(i).getEmail_Studente());
 							psmt.setInt(2, listaprogettiFormativi.getListaProgettoFormativo().get(i).getId());
-							psmt.setString(3, "none");
-							psmt.setString(4, "none");
-							psmt.setString(5, "none");
+							psmt.setString(3,listaprogettiFormativi.getListaProgettoFormativo().get(i).getDataInizio());
+							psmt.setString(4, listaprogettiFormativi.getListaProgettoFormativo().get(i).getDataFine());
+							psmt.setString(5, listaprogettiFormativi.getListaProgettoFormativo().get(i).getSede());
+							psmt.setBoolean(6, false);
 							psmt.executeUpdate();
 
 						}
@@ -612,7 +666,7 @@ public class LoginControl extends HttpServlet {
 
 				try {
 					String sqlSelect = "SELECT"
-							+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente` FROM  `TIROCINIO`; ";
+							+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente`,`Completato` FROM  `TIROCINIO`; ";
 
 					st = c.createStatement();
 					rs = st.executeQuery(sqlSelect);
@@ -623,6 +677,7 @@ public class LoginControl extends HttpServlet {
 						tirocinio.setDataFine(rs.getString("Data_Fine"));
 						tirocinio.setEmailStudente(rs.getString("Email_Studente"));
 						tirocinio.setSede(rs.getString("Sede"));
+						tirocinio.setCompletato(rs.getBoolean("Completato"));
 						listaTirocini.addTirocinio(tirocinio);
 					}
 					userSession.setAttribute("listaTirocini", listaTirocini);

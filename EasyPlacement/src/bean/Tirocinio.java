@@ -1,13 +1,22 @@
 package bean;
 
 public class Tirocinio {
-	
+
 	private String dataInizio;
 	private String dataFine;
 	private String sede;
 	private String emailStudente;
 	private int id;
-	
+	private boolean completato;
+
+	public boolean isCompletato() {
+		return completato;
+	}
+
+	public void setCompletato(boolean completato) {
+		this.completato = completato;
+	}
+
 	public Tirocinio() {
 		super();
 	}

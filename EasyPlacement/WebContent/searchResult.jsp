@@ -40,9 +40,7 @@ td, th {
 </head>
 <body>
 
-	<%
-		try {
-	%>
+
 
 	<div style="margin-top: 0px;">
 		<ul>
@@ -63,8 +61,11 @@ td, th {
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row1">
 			<div style="margin-top: 10px;">
+
 				<%
-					ListaAziende listaAziende = (ListaAziende) session.getAttribute("ricercaAzienda");
+					try {
+
+						ListaAziende listaAziende = (ListaAziende) session.getAttribute("ricercaAzienda");
 
 						String azienda = (String) session.getAttribute("campoRicerca");
 						if (listaAziende.getListaAziende().isEmpty()) {
