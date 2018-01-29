@@ -63,7 +63,7 @@ td, th {
 	<div
 		style="position: absolute; top: 150px; left: 250px; width: 76%; height: auto;"
 		id="leftside">
-		<a href="consultaRegistro.jsp">ddsadasd</a>
+		
 		<form action="AccettaRifiutaRichiesta" method="post"
 			name="accettarifiutarichiesta">
 			<div id="formRicerca"

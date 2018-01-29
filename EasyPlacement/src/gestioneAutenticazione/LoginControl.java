@@ -85,30 +85,7 @@ public class LoginControl extends HttpServlet {
 
 
 
-		ListaTirocini listaTirocini = new ListaTirocini();
 
-		try {
-			ConnessioneDB conn = new ConnessioneDB();
-			Connection c = conn.getConnection();
-			String sqlSelect = "SELECT"
-					+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente` ,`Completato` FROM  `TIROCINIO`; ";
-
-			Statement st = c.createStatement();
-			ResultSet rs = st.executeQuery(sqlSelect);
-
-			while (rs.next()) {
-				Tirocinio tirocinio = new Tirocinio();
-				tirocinio.setId(rs.getInt("Id_Progetto_Formativo"));
-				tirocinio.setDataFine(rs.getString("Data_Fine"));
-				tirocinio.setEmailStudente(rs.getString("Email_Studente"));
-				tirocinio.setSede(rs.getString("Sede"));
-				tirocinio.setCompletato(rs.getBoolean("Completato"));
-				listaTirocini.addTirocinio(tirocinio);
-			}
-			userSession.setAttribute("listaTirocini", listaTirocini);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		try {
 			ListaUtenti lista = new ListaUtenti();
@@ -614,23 +591,7 @@ public class LoginControl extends HttpServlet {
 					e.printStackTrace();
 				}
 
-				listaRegistro = new ListaRegistro();
-
-				try {
-					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
-					st = c.createStatement();
-					rs = st.executeQuery(sqlSelect);
-					while (rs.next()) {
-						Registro registro = new Registro();
-						registro.setData(rs.getString("Data"));
-						registro.setIsFirmed(rs.getBoolean("Firma"));
-						registro.setId(rs.getInt("Id_Progetto_Formativo"));
-						listaRegistro.addRegistro(registro);
-					}
-					userSession.setAttribute("listaRegistro", listaRegistro);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				System.out.println(listaprogettiFormativi.getListaProgettoFormativo().size());
 
 				try {
 					for(int i=l.getListaTirocini().size(); i<listaprogettiFormativi.getListaProgettoFormativo().size(); i++) {
@@ -644,7 +605,7 @@ public class LoginControl extends HttpServlet {
 							c = con.getConnection();
 							String sql = "INSERT INTO  `TIROCINIO` "
 									+ "(`Email_Studente` ,`Id_Progetto_Formativo`,`Data_Inizio`,`Data_Fine`,`Sede`,`Completato` ) "
-									+ "VALUES (?,?,?,?,?); ";
+									+ "VALUES (?,?,?,?,?,?); ";
 							PreparedStatement psmt = c.prepareStatement(sql);
 							psmt.setString(1, listaprogettiFormativi.getListaProgettoFormativo().get(i).getEmail_Studente());
 							psmt.setInt(2, listaprogettiFormativi.getListaProgettoFormativo().get(i).getId());
@@ -661,30 +622,6 @@ public class LoginControl extends HttpServlet {
 					e.printStackTrace();
 
 				}
-
-				listaTirocini = new ListaTirocini();
-
-				try {
-					String sqlSelect = "SELECT"
-							+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente`,`Completato` FROM  `TIROCINIO`; ";
-
-					st = c.createStatement();
-					rs = st.executeQuery(sqlSelect);
-
-					while (rs.next()) {
-						Tirocinio tirocinio = new Tirocinio();
-						tirocinio.setId(rs.getInt("Id_Progetto_Formativo"));
-						tirocinio.setDataFine(rs.getString("Data_Fine"));
-						tirocinio.setEmailStudente(rs.getString("Email_Studente"));
-						tirocinio.setSede(rs.getString("Sede"));
-						tirocinio.setCompletato(rs.getBoolean("Completato"));
-						listaTirocini.addTirocinio(tirocinio);
-					}
-					userSession.setAttribute("listaTirocini", listaTirocini);
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
-
 
 				con = new ConnessioneDB();
 				c = con.getConnection();
@@ -748,6 +685,31 @@ public class LoginControl extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 
+		}
+
+		ListaTirocini listaTirocini = new ListaTirocini();
+
+		try {
+			ConnessioneDB conn = new ConnessioneDB();
+			Connection c = conn.getConnection();
+			String sqlSelect = "SELECT"
+					+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente` ,`Completato` FROM  `TIROCINIO`; ";
+
+			Statement st = c.createStatement();
+			ResultSet rs = st.executeQuery(sqlSelect);
+
+			while (rs.next()) {
+				Tirocinio tirocinio = new Tirocinio();
+				tirocinio.setId(rs.getInt("Id_Progetto_Formativo"));
+				tirocinio.setDataFine(rs.getString("Data_Fine"));
+				tirocinio.setEmailStudente(rs.getString("Email_Studente"));
+				tirocinio.setSede(rs.getString("Sede"));
+				tirocinio.setCompletato(rs.getBoolean("Completato"));
+				listaTirocini.addTirocinio(tirocinio);
+			}
+			userSession.setAttribute("listaTirocini", listaTirocini);
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
