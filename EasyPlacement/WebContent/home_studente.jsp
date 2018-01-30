@@ -7,7 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <title>EasyPlacement</title>
@@ -179,13 +179,12 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 
 
 			<form action="RicercaAzienda" method="post" name="ricerca">
-
 				<input id="barraRicerca" name="campoRicerca"
 					style="position: absolute; border-radius: 10px 10px 10px 10px; width: 80%; left: 44%; top: -20px;"
-					type="text" class="form-control"
-					placeholder="Inserisci nome azienda..."> <input
-					style="top: -50px; left: 95%; width: 10%" class="btn btn-default"
-					type="submit" value="Cerca" id="buttonCerca">
+					type="text" class="form-control" placeholder ="Inserisci nome azienda...">
+				<input style="top: -50px; left: 95%; width: 10%"
+					class="btn btn-default" type="submit" value="Cerca"
+					id="buttonCerca">
 
 			</form>
 			<div style="margin-top: -100px;">
@@ -246,9 +245,8 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			<form style="margin-top: 10px;">
 				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
 					style="left: 100px;"><input type="checkbox"
-					checked="checked" disabled="disabled" 
-						id="chkProdTomove" />
-					<span class="check-box-effect"></span> </label>
+					checked="checked" disabled="disabled" id="chkProdTomove" /> <span
+					class="check-box-effect"></span> </label>
 			</form>
 
 			<%

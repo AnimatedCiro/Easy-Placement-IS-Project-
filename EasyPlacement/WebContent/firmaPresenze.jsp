@@ -1,3 +1,4 @@
+<%@page import="com.sun.xml.internal.ws.api.ha.StickyFeature"%>
 <%@page import="bean.ListaRegistro"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.GregorianCalendar"%>
@@ -14,19 +15,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 <html>
 <head>
-
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>EasyPLacement</title>
-
 <%@include file="includesPage/stylesheets.html"%>
-
 <script type="text/javascript" src="javaScript/firmaValidator.js"></script>
-
-
-
 <style type="text/css">
 label {
 	display: unset;
@@ -34,7 +28,6 @@ label {
 	cursor: pointer;
 	position: relative;
 }
-
 label .check-box-effect {
 	display: inline-block;
 	position: relative;
@@ -44,7 +37,6 @@ label .check-box-effect {
 	border: 2px solid #dcdcdc;
 	border-radius: 10%;
 }
-
 label .check-box-effect:before {
 	content: "";
 	width: 0px;
@@ -58,7 +50,6 @@ label .check-box-effect:before {
 	transition: width 50ms ease 50ms;
 	transform-origin: 0% 0%;
 }
-
 label .check-box-effect:after {
 	content: "";
 	width: 0;
@@ -72,55 +63,45 @@ label .check-box-effect:after {
 	transition: width 50ms ease;
 	transform-origin: 0% 0%;
 }
-
 label:hover .check-box-effect:before {
 	width: 5px;
 	transition: width 100ms ease;
 }
-
 label:hover .check-box-effect:after {
 	width: 10px;
 	transition: width 150ms ease 100ms;
 }
-
 input[type="checkbox"] {
 	display: none;
 }
-
 input[type="checkbox"]:checked+.check-box-effect {
 	background-color: green !important;
 	transform: scale(1.25);
 }
-
 input[type="checkbox"]:checked+.check-box-effect:after {
 	width: 10px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
-
 input[type="checkbox"]:checked+.check-box-effect:before {
 	width: 5px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
-
 input[type="checkbox"]:checked:hover+.check-box-effect {
 	background-color: #dcdcdc;
 	transform: scale(1.25);
 }
-
 input[type="checkbox"]:checked:hover+.check-box-effect:after {
 	width: 10px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
-
 input[type="checkbox"]:checked:hover+.check-box-effect:before {
 	width: 5px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
-
 #nomeUtenteLoggato {
 	margin-right: 10px;
 	list-style-type: none;
@@ -135,9 +116,6 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 </style>
 </head>
 <body>
-
-
-
 	<div style="margin-top: 0px;">
 		<ul>
 			<li style="border: 3px solid;" id="nomeUtenteLoggato"><a
@@ -162,10 +140,8 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 					style="color: #ff8221; size: 100px; font-family: sans-serif; margin-bottom: 20px;">Firma
 					presenza studente</h2>
 			</div>
-
 			<%
 				try {
-
 					ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
 
 					if (registro.getListaRegistro().size() > 3) {
@@ -175,20 +151,20 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			<form style="margin-top: 10px;">
 				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
 					style="left: 100px;"><input type="checkbox"
-					checked="checked" disabled="disabled" "
+					checked="checked" disabled="disabled" 
 						id="chkProdTomove" />
 					<span class="check-box-effect"></span> </label>
 			</form>
 			<%
 				}
-
 					} else {
+
 						for (int i = 0; i < registro.getListaRegistro().size(); i++) {
 			%>
 			<form style="margin-top: 10px;">
 				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
 					style="left: 100px;"><input type="checkbox"
-					checked="checked" disabled="disabled" "
+					checked="checked" disabled="disabled" 
 						id="chkProdTomove" />
 					<span class="check-box-effect"></span> </label>
 			</form>
@@ -209,6 +185,8 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 						if (lista.getListaProgettoFormativo().get(i).getId() == idS) {
 							stringDataInizio = lista.getListaProgettoFormativo().get(i).getDataInizio();
 							stringDataFine = lista.getListaProgettoFormativo().get(i).getDataFine();
+							System.out.println(stringDataInizio);
+							System.out.println(stringDataFine);
 						}
 					}
 
@@ -233,15 +211,20 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 					for (int i = 0; i < dates.size(); i++) {
 
 						Calendar g = new GregorianCalendar();
+						Calendar f = new GregorianCalendar();
 						g.setTime(dates.get(i));
+						f.setTime(new Date());
+						System.out.println(f.getTime());
 
-						if (g.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+						if (g.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+								&& f.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
 			%>
 
 			<h2>Oggi è Sabato</h2>
 
 			<%
-				} else if (g.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+				} else if (g.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+								&& f.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 			%>
 
 			<h2>Oggi è Domenica</h2>
@@ -276,7 +259,6 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 					type="submit" value="Firma">
 			</form>
 			<%
-				System.out.println(dataStr2);
 													i = dates.size();
 												} else {
 												}
@@ -303,10 +285,8 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 				}
 							}
 						}
-
 					}
 				} catch (Exception e) {
-
 					response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
 				}
 			%>

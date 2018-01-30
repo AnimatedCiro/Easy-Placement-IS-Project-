@@ -20,13 +20,21 @@ import bean.Tirocinio;
 import database.ConnessioneDB;
 
 /**
- * Servlet implementation class ConvalidaFinaleTirocinio
+ * @author gregoriosaggese
+ *
  */
+
+/**
+ * Servlet implementation class ConvalidaFinaleTirocinio
+ * Classe che definisce <i>ConvalidaFinaleTirocinio</i> 
+ */
+
 @WebServlet("/ConvalidaFinaleTirocinio")
 public class ConvalidaFinaleTirocinio extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * costruttore vuoto
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public ConvalidaFinaleTirocinio() {
@@ -42,42 +50,32 @@ public class ConvalidaFinaleTirocinio extends HttpServlet {
 	}
 
 	/**
+	 * metodo che convalida la fine del tirocinio nel database, aggiorna la lista progetto formativo e la lista del tirocinio 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		String id = request.getParameter("id");
 		int idS = Integer.parseInt(id);
-
 		HttpSession session = request.getSession();
-
 		try {
-
 			ConnessioneDB conn = new ConnessioneDB();
 			Connection c = conn.getConnection();
-			String updateTirocinio = "UPDATE `TIROCINIO` SET `Completato`= ?,"
-					+ " WHERE `Id_Progetto_Formativo`= " +"'" + idS + "';";
-
+			String updateTirocinio = "UPDATE `TIROCINIO` SET `Completato` = ?"
+					+ " WHERE `Id_Progetto_Formativo`= " + "'" + idS + "'";
 			PreparedStatement psmt = c.prepareStatement(updateTirocinio);
 			psmt.setBoolean(1, true);
 			psmt.executeUpdate();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		String selectProgettoFormativo = "SELECT * FROM `PROGETTO FORMATIVO`";
-		
 		ListaProgettiFormativi listaprogettiFormativi = new ListaProgettiFormativi();
-
-		try {
-			
+		try {		
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(selectProgettoFormativo);
-
 			while(rs.next()) {
-
 				ProgettoFormativo progettoFormativo = new ProgettoFormativo();
 				progettoFormativo.setId(rs.getInt("Id"));
 				progettoFormativo.setNome(rs.getString("Nome"));
@@ -112,31 +110,23 @@ public class ConvalidaFinaleTirocinio extends HttpServlet {
 				progettoFormativo.setDataInizio(rs.getString("DataInizio"));
 				progettoFormativo.setDataFine(rs.getString("DataFine"));
 				progettoFormativo.setSede(rs.getString("Sede"));
-
 				listaprogettiFormativi.addProgettoFormativo(progettoFormativo);
 			}
-
 			session.setAttribute("listaprogettiFormativi", listaprogettiFormativi);
 			st.close();
 			rs.close();
 			c.close();
-
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		ListaTirocini listaTirocini = new ListaTirocini();
-
 		try {
-
 			String sqlSelect = "SELECT"
 					+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente`,`Completato` FROM  `TIROCINIO`; ";
-
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(sqlSelect);
-
 			while (rs.next()) {
 				Tirocinio tirocinio = new Tirocinio();
 				tirocinio.setId(rs.getInt("Id_Progetto_Formativo"));
@@ -150,7 +140,6 @@ public class ConvalidaFinaleTirocinio extends HttpServlet {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		response.sendRedirect(request.getContextPath()+"/index.jsp");
 	}
-
 }

@@ -88,12 +88,12 @@ td, th {
 						}
 									} else {
 					%>
-					
+
 					<%
 						}
 								} else {
 					%>
-					
+
 					<%
 						}
 							}
@@ -135,13 +135,13 @@ td, th {
 			%>
 
 		</div>
+	</div>
+	<%
+		} catch (Exception e) {
+			response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
+		}
+	%>
 
-		<%
-			} catch (Exception e) {
-				response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
-			}
-		%>
-	
 </body>
 </html>
 

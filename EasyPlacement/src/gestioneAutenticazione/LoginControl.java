@@ -28,43 +28,56 @@ import bean.Tirocinio;
 import bean.TutorAccademico;
 import bean.TutorAziendale;
 import bean.UfficioStageTirocini;
+/**
+ * @author gregoriosaggese
+ *
+ */
 
+/**
+ * Servlet implementation class LoginControl
+ * Classe che definisce <i>LoginControl</i> 
+ */
 @WebServlet("/LoginControl")
 public class LoginControl extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-
+	/**
+	 * costruttore vuoto
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public LoginControl() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doPost(request, response);
 	}
-
+	/**
+	 * metodo che gestisce l'autenticazione delle varie tipologie di utente 
+	 * crea la lista degli utenti, aggiorna la lista dei tirocini,il registro delle presenze,la lista delle aziende,
+	 * e la lista delle richieste(ListaProgettoFormativo)
+	 * gestisce l'errore di sbagliata autenticazione
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		String username, pass;
-
 		String db_username, db_pass;
-
 		boolean isLoggedIn = false;
-
 		HttpSession userSession = request.getSession();
-
 		username = request.getParameter("usernameLogin");
-
 		pass = request.getParameter("passwordLogin");
-
 		String message, messageDetail;
-
 		message = "Username non Esistente";
 		messageDetail = "Effettua la registrazione";
-
-
 		ListaRegistro listaRegistro = new ListaRegistro();
-
 		try {
 			ConnessioneDB conn = new ConnessioneDB();
 			Connection c = conn.getConnection();
@@ -82,25 +95,15 @@ public class LoginControl extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
-
-
-
 		try {
 			ListaUtenti lista = new ListaUtenti();
-
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			String sqlGetUser;
-
 			sqlGetUser = "SELECT  `Username` ,  "
 					+ "`Password`,`Nome`,`Cognome`,`Email`,`Numero_Telefonico` FROM  `STUDENTE`; ";
-
 			Statement st = c.createStatement();
-
 			ResultSet rs = st.executeQuery(sqlGetUser);
-
 			String nome,cognome,email,numeroTelefono;
 			Studente studente = null;
 			while (rs.next()) {
@@ -110,7 +113,6 @@ public class LoginControl extends HttpServlet {
 				cognome = rs.getString("Cognome");
 				email = rs.getString("Email");
 				numeroTelefono = rs.getString("Numero_Telefonico");
-
 				studente = new Studente();
 				studente.setUsername(username1);
 				studente.setPassword(pass1);
@@ -128,27 +130,21 @@ public class LoginControl extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		try {
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			String sqlAzienda = "SELECT * FROM  `AZIENDA`; ";
-
 			Statement st = c.createStatement();
 			ResultSet rsAzienda = st.executeQuery(sqlAzienda);
 			String nomeAzienda = null,sede = null,numeroTelefono = null,progettoOfferto,inizioTirocinio,fineTirocinio;
-
 			ListaAziende listaAziende = new ListaAziende();
-
 			while (rsAzienda.next()) {
-
 				nomeAzienda = rsAzienda.getString("Nome");
 				sede = rsAzienda.getString("Sede");
 				inizioTirocinio = rsAzienda.getString("InizioTirocinio");
 				fineTirocinio = rsAzienda.getString("FineTirocinio");
 				numeroTelefono=	rsAzienda.getString("Numero_Telefonico");
 				progettoOfferto=	rsAzienda.getString("Progetto_Offerto");
-
 				Azienda azienda = new Azienda();
 				azienda.setNome(nomeAzienda);
 				azienda.setSede(sede);
@@ -157,29 +153,22 @@ public class LoginControl extends HttpServlet {
 				azienda.setInizioTirocinio(inizioTirocinio);
 				azienda.setFineTirocinio(fineTirocinio);
 				listaAziende.addAzienda(azienda);
-
 			}
 			userSession.setAttribute("listaAziende", listaAziende);
 			st.close();
 			rsAzienda.close();
 			c.close();
-
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
 		String selectRichiesta = "SELECT * FROM `RICHIESTA`";
 		ListaRichieste listaRichieste = new ListaRichieste();
-
 		try {
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(selectRichiesta);
-
 			while(rs.next()) {
-
 				Richiesta richiesta = new Richiesta();
 				richiesta.setIdStudente(rs.getInt("id_studente"));
 				richiesta.setStato(rs.getBoolean("Stato"));
@@ -189,27 +178,21 @@ public class LoginControl extends HttpServlet {
 				richiesta.setNomeUtenteResponsabileAziendale(rs.getString("Responsabile Aziendale"));
 				listaRichieste.addRichiesta(richiesta);
 			}
-
 			userSession.setAttribute("listaRichieste", listaRichieste);
 			st.close();
 			rs.close();
 			c.close();
-
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		String selectProgettoFormativo = "SELECT * FROM `PROGETTO FORMATIVO`";
 		ListaProgettiFormativi listaprogettiFormativi = new ListaProgettiFormativi();
-
 		try {
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(selectProgettoFormativo);
-
 			while(rs.next()) {
-
 				ProgettoFormativo progettoFormativo = new ProgettoFormativo();
 				progettoFormativo.setId(rs.getInt("Id"));
 				progettoFormativo.setNome(rs.getString("Nome"));
@@ -244,32 +227,24 @@ public class LoginControl extends HttpServlet {
 				progettoFormativo.setDataInizio(rs.getString("DataInizio"));
 				progettoFormativo.setDataFine(rs.getString("DataFine"));
 				progettoFormativo.setSede(rs.getString("Sede"));
-
 				listaprogettiFormativi.addProgettoFormativo(progettoFormativo);
 			}
-
 			userSession.setAttribute("listaprogettiFormativi", listaprogettiFormativi);
 			st.close();
 			rs.close();
 			c.close();
-
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		try {
-
 			if(username.contains("responsabileAziendale")) {
-
 				ConnessioneDB con = new ConnessioneDB();
 				Connection c = con.getConnection();
 				String sqlGetUsers;
-
 				sqlGetUsers = "SELECT  `Nome_Utente` ,  "
 						+ "`Password`,`Nome`,`Cognome` FROM  `RESPONSABILE AZIENDALE`; ";
 				PreparedStatement st = c.prepareStatement(sqlGetUsers);
 				ResultSet rs = st.executeQuery();
-
 				while (rs.next()) {
 					String nome,cognome;
 					db_username = rs.getString("Nome_Utente");
@@ -307,18 +282,14 @@ public class LoginControl extends HttpServlet {
 					response.sendRedirect(request.getContextPath()+"/message.jsp");
 				}
 			}
-
 			else if (username.contains("tutorAccademico")) {
 				ConnessioneDB con = new ConnessioneDB();
 				Connection c = con.getConnection();
 				String sqlGetUsers;
-
 				sqlGetUsers = "SELECT  `Nome_Utente` ,  "
 						+ "`Password`,`Nome`,`Cognome` FROM  `TUTOR ACCADEMICO`; ";
-
 				PreparedStatement st = c.prepareStatement(sqlGetUsers);
 				ResultSet rs = st.executeQuery();
-
 				while (rs.next()) {
 					String nome,cognome;
 					db_username = rs.getString("Nome_Utente");
@@ -356,21 +327,15 @@ public class LoginControl extends HttpServlet {
 					response.sendRedirect(request.getContextPath()+"/message.jsp");
 				}
 			}
-
 			else if (username.contains("tutorAziendale")) {
 
 				ConnessioneDB con = new ConnessioneDB();
 				Connection c = con.getConnection();
 				String sqlGetUsers;
-
 				sqlGetUsers = "SELECT  `Nome_Utente` ,  "
 						+ "`Password`,`Nome`,`Cognome`,`Numero_Telefonico`,`Email`,`Nome_Azienda` FROM  `TUTOR AZIENDALE`; ";
-
 				PreparedStatement st; 
 				ResultSet rs; 
-
-
-
 				st = c.prepareStatement(sqlGetUsers);
 				rs = st.executeQuery();
 				while (rs.next()) {
@@ -410,9 +375,7 @@ public class LoginControl extends HttpServlet {
 						isLoggedIn = false;
 					}
 				}
-
 				listaRegistro = new ListaRegistro();
-
 				try {
 					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
 					st = c.prepareStatement(sqlSelect);
@@ -428,26 +391,20 @@ public class LoginControl extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
 				if (isLoggedIn == false){
 					userSession.setAttribute("message", message);
 					userSession.setAttribute("messageDetail", messageDetail);
 					response.sendRedirect(request.getContextPath()+"/message.jsp");
 				}
 			}
-
 			else if (username.contains("ufficioStageETirocini")) {
-
 				ConnessioneDB con = new ConnessioneDB();
 				Connection c = con.getConnection();
 				String sqlGetUsers;
-
 				sqlGetUsers = "SELECT  `Nome_Utente` ,  "
 						+ "`Password` FROM  `UFFICIO STAGE E TIROCINI`; ";
-
 				PreparedStatement st = c.prepareStatement(sqlGetUsers);
 				ResultSet rs = st.executeQuery();
-
 				while (rs.next()) {
 					db_username = rs.getString("Nome_Utente");
 					db_pass = rs.getString("Password");
@@ -474,28 +431,22 @@ public class LoginControl extends HttpServlet {
 						isLoggedIn = false;
 					}
 				}
-
 				if (isLoggedIn == false){
 					userSession.setAttribute("message", message);
 					userSession.setAttribute("messageDetail", messageDetail);
 					response.sendRedirect(request.getContextPath()+"/message.jsp");
 				}
 			}
-
 			else if (username.contains("presidenteConsiglioDidattico")) {
-
 				ConnessioneDB con;
 				Connection c;
 				PreparedStatement st;
 				ResultSet rs;
-
 				listaRegistro = new ListaRegistro();
-
 				try {
 					con = new ConnessioneDB();
 					c = con.getConnection();
 					String sqlSelect = "SELECT * FROM `REGISTRO`; ";
-
 					st = c.prepareStatement(sqlSelect);
 					rs = st.executeQuery();
 					while (rs.next()) {
@@ -509,20 +460,13 @@ public class LoginControl extends HttpServlet {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
-
-
 				con = new ConnessioneDB();
 				c = con.getConnection();
 				String sqlGetUsers;
-
 				sqlGetUsers = "SELECT  `Nome_Utente` ,  "
 						+ "`Password`,`Nome`,`Cognome` FROM  `PRESIDENTE CONSIGLIO DIDATTICO`; ";
-
 				st = c.prepareStatement(sqlGetUsers);
 				rs = st.executeQuery();
-
-
 				while (rs.next()) {
 					String nome,cognome;
 					db_username = rs.getString("Nome_Utente");
@@ -560,39 +504,27 @@ public class LoginControl extends HttpServlet {
 					response.sendRedirect(request.getContextPath()+"/message.jsp");
 				}
 			}
-
 			else {
-
 				ConnessioneDB con = new ConnessioneDB();
 				Connection c = con.getConnection();
-
 				Statement st;
 				ResultSet rs;
 				int id = 0;
-
 				ListaTirocini l = new ListaTirocini();
-
 				try {
 					String sqlSelect = "SELECT "
 							+ "`Id_Progetto_Formativo` FROM  `TIROCINIO`; ";
-
 					st = c.createStatement();
-
 					rs = st.executeQuery(sqlSelect);
-
 					while (rs.next()) {
 						id = rs.getInt("Id_Progetto_Formativo");
 						Tirocinio t = new Tirocinio();
 						t.setId(id);
 						l.addTirocinio(t);
 					}
-
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
-
-				System.out.println(listaprogettiFormativi.getListaProgettoFormativo().size());
-
 				try {
 					for(int i=l.getListaTirocini().size(); i<listaprogettiFormativi.getListaProgettoFormativo().size(); i++) {
 						if( listaprogettiFormativi.getListaProgettoFormativo().get(i).isFirma_Azienda() == true &&
@@ -600,7 +532,6 @@ public class LoginControl extends HttpServlet {
 								listaprogettiFormativi.getListaProgettoFormativo().get(i).isFirma_Studente() == true && 
 								listaprogettiFormativi.getListaProgettoFormativo().get(i).isFirma_Tutor_Accademico() == true && 
 								listaprogettiFormativi.getListaProgettoFormativo().get(i).isFirma_Tutor_Aziendale() == true ) {
-
 							con = new ConnessioneDB();
 							c = con.getConnection();
 							String sql = "INSERT INTO  `TIROCINIO` "
@@ -614,26 +545,19 @@ public class LoginControl extends HttpServlet {
 							psmt.setString(5, listaprogettiFormativi.getListaProgettoFormativo().get(i).getSede());
 							psmt.setBoolean(6, false);
 							psmt.executeUpdate();
-
 						}
 					}
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-
 				}
-
 				con = new ConnessioneDB();
 				c = con.getConnection();
 				String sqlGetUsers;
-
 				sqlGetUsers = "SELECT  `Username` ,  "
 						+ "`Password`,`Nome`,`Cognome`,`Email`,`Numero_Telefonico` FROM  `STUDENTE`; ";
-
 				st = c.createStatement();
-
 				rs = st.executeQuery(sqlGetUsers);
-
 				String nome,cognome,email,numeroTelefono;
 				Studente studente = null;
 				while (rs.next()) {
@@ -669,35 +593,26 @@ public class LoginControl extends HttpServlet {
 						messageDetail = "Effettua la registrazione";
 						isLoggedIn = false;
 					}
-
 				}
-
 				if (isLoggedIn == false){
 					userSession.setAttribute("message", message);
 					userSession.setAttribute("messageDetail", messageDetail);
 					response.sendRedirect(request.getContextPath()+"/message.jsp");
 				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();    
-
 		} catch (Exception e) {
 			e.printStackTrace();
-
 		}
-
 		ListaTirocini listaTirocini = new ListaTirocini();
-
 		try {
 			ConnessioneDB conn = new ConnessioneDB();
 			Connection c = conn.getConnection();
 			String sqlSelect = "SELECT"
 					+ "`Id_Progetto_Formativo` ,`Data_Inizio`,`Data_Fine`,`Sede`,`Email_Studente` ,`Completato` FROM  `TIROCINIO`; ";
-
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(sqlSelect);
-
 			while (rs.next()) {
 				Tirocinio tirocinio = new Tirocinio();
 				tirocinio.setId(rs.getInt("Id_Progetto_Formativo"));

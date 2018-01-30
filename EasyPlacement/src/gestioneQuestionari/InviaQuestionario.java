@@ -15,13 +15,25 @@ import javax.servlet.http.HttpServletResponse;
 import mail.MailUtility;
 
 /**
+ * @author gregoriosaggese
+ *
+ */
+
+/**
  * Servlet implementation class InviaQuestionario
+ * Classe che definisce <i>InviaQuestionario</i> 
+ * String host; String port; String user; String pass;
  */
 @WebServlet("/InviaQuestionario")
 public class InviaQuestionario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private String host;
+	private String port;
+	private String user;
+	private String pass;
 	/**
+	 * costruttore vuoto
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public InviaQuestionario() {
@@ -37,32 +49,26 @@ public class InviaQuestionario extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * metodo che inizializza le variabili d'istanza per l'invio della mail
+	 * le legge dal file web.xml
 	 */
-	private String host;
-	private String port;
-	private String user;
-	private String pass;
-
 	public void init() {
-		// reads SMTP server setting from web.xml file
 		ServletContext context = getServletContext();
-
 		host = context.getInitParameter("host");
 		port = context.getInitParameter("port");
 		user = context.getInitParameter("user");
 		pass = context.getInitParameter("pass");
 	}
 
-
+	/**
+	 * metodo che crea un file con i dati del questionario compilato dallo studente e dal tutor aziendale e l'invia via email ad una mail creata appositamente
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		if(request.getParameter("questionario").equalsIgnoreCase("studente")) {
-
-
 			String tirocinante,periodosvolgimento,titolo,ente,sede,provincia,tutorente,email,tutoraccademico;
 			String conoscenze,formazione,skill,durata,Valutazione,allente,Ambiente,Competenze,strumentale,Ospitante,esaustive,assistenza,servizi;
-
 			tirocinante = request.getParameter("tirocinante");
 			periodosvolgimento = request.getParameter("periodosvolgimento");
 			titolo = request.getParameter("titolodeltirocinio");
@@ -72,7 +78,6 @@ public class InviaQuestionario extends HttpServlet {
 			tutorente = request.getParameter("enteospitante");
 			email = request.getParameter("email");
 			tutoraccademico = request.getParameter("tutoraccademico");
-
 			conoscenze = request.getParameter("conoscenze");
 			formazione = request.getParameter("formazione");
 			skill = request.getParameter("skill");
@@ -86,7 +91,6 @@ public class InviaQuestionario extends HttpServlet {
 			Ospitante = request.getParameter("Ospitante");
 			assistenza = request.getParameter("assistenza");
 			servizi = request.getParameter("servizi");
-
 			String testo ="Tirocinante : "+tirocinante +"\n" 
 					+ "Periodo svolgimento tirocinio: " + periodosvolgimento +"\n"
 					+ "Titolo del tirocinio: "+ titolo+"\n"
@@ -114,27 +118,18 @@ public class InviaQuestionario extends HttpServlet {
 					+"I servizi/informazioni fornite via Web sono esaustive  "+servizi+"\n"
 					+"Eventuali informazioni: \n"
 					+request.getParameter("informazioni");
-
-
 			File file = new File("file.txt");
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
 			out.writeObject(testo);
 			out.close();
-
 			try {
 				MailUtility.sendEmail(host, port, user, pass, file);
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
-
 			} 
-
 		}else {
-
 			String titolotirocinio,tutoraccademico,enteospitante,sedetirocinio,provincia,tutorenteospitante,posizionericoperta,email,tirocinante,periodosvolgimento;
-
 			String conoscenze,formazione,skill,durata,allente,Ambiente,Competenze,strumentale,esaustive,assistenza,servizi;
-
 			enteospitante = request.getParameter("enteospitante");
 			sedetirocinio = request.getParameter("sedetirocinio");
 			provincia = request.getParameter("provincia");
@@ -145,7 +140,6 @@ public class InviaQuestionario extends HttpServlet {
 			tirocinante = request.getParameter("tirocinante");
 			periodosvolgimento = request.getParameter("periodosvolgimento");
 			titolotirocinio = request.getParameter("titolotirocinio");
-
 			conoscenze = request.getParameter("conoscenze");
 			formazione = request.getParameter("formazione");
 			skill = request.getParameter("skill");
@@ -157,7 +151,6 @@ public class InviaQuestionario extends HttpServlet {
 			esaustive = request.getParameter("esaustive");
 			assistenza = request.getParameter("assistenza");
 			servizi = request.getParameter("servizi");
-
 			String testo ="Ente ospitante : "+enteospitante +"\n" 
 					+ "Sede tirocinio: " + sedetirocinio +"\n"
 					+ "Provincia : "+ provincia+"\n"
@@ -168,8 +161,6 @@ public class InviaQuestionario extends HttpServlet {
 					+"Tirocinante: " +tirocinante+"\n"
 					+"Periodo Svolgimento del Tirocinio: "+periodosvolgimento+"\n" 
 					+"Titolo del Tirocinio: "+titolotirocinio+"\n" 
-
-
 					+"Relativamente al progetto di Tirocinio: \n"
 					+"La durata del tirocinio è stata adeguata agli obiettivi formativi  "+conoscenze +"\n" 
 					+"Gli obiettivi formativi previsti sono stati raggiunti  " +formazione+"\n"
@@ -186,27 +177,16 @@ public class InviaQuestionario extends HttpServlet {
 					+"I servizi/informazioni fornite via Web sono esaustive  "+servizi+"\n"
 					+"Eventuali informazioni: \n"
 					+request.getParameter("informazioni");
-
-
 			File file = new File("file.txt");
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
 			out.writeObject(testo);
 			out.close();
-
 			try {
 				MailUtility.sendEmail(host, port, user, pass, file);
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
-
 			} 
-
-
 		}
-
-
 		response.sendRedirect(request.getContextPath()+"/index.jsp");
-
 	}
-
 }

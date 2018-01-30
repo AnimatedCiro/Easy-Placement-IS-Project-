@@ -18,13 +18,20 @@ import bean.Richiesta;
 import database.ConnessioneDB;
 
 /**
+ * @author gregoriosaggese
+ *
+ */
+
+/**
  * Servlet implementation class AccettaRifiutaRichiesta
+ * Classe che definisce <i>AccettaRifiutaRichiesta</i> 
  */
 @WebServlet("/AccettaRifiutaRichiesta")
 public class AccettaRifiutaRichiesta extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * costruttore vuoto
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public AccettaRifiutaRichiesta() {
@@ -41,10 +48,12 @@ public class AccettaRifiutaRichiesta extends HttpServlet {
 	}
 
 	/**
+	 * metodo che permette al responsaabile aziendale di accettare o rifiutare una richiesta di uno specifico studente
+	 * se accetta inserisce la richiesta nella lista ricjieste se rifiuta la elimina dal lista progetto formativo
+	 * aggiorna la lista richieste
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		String id, value;
 		value = request.getParameter("action").substring(0, 7);
 		if(value.equalsIgnoreCase("Rifiuta")) {
@@ -53,50 +62,38 @@ public class AccettaRifiutaRichiesta extends HttpServlet {
 			id = request.getParameter("action").substring(8);
 		}
 		int idS = Integer.parseInt(id); 
-
 		HttpSession userSession = request.getSession();
 		try {
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
-
 			if(value.equalsIgnoreCase("Accetta")) {
-
 				String updateRichiesta = "UPDATE `RICHIESTA` SET `Stato`= ? WHERE `id_studente`= " +"'" + idS + "';";
 				PreparedStatement psmt = c.prepareStatement(updateRichiesta);
 				psmt.setBoolean(1, true);
 				psmt.executeUpdate();
-
 				String updateProgettoFormativo = "UPDATE `PROGETTO FORMATIVO` SET `Firma_Azienda`= ? WHERE `Id`= " +"'" + idS + "';";
 				psmt = c.prepareStatement(updateProgettoFormativo);
 				psmt.setBoolean(1, true);
 				psmt.executeUpdate();
-
 			}else {
-
 				String deleteFromRichiesta = "DELETE FROM `RICHIESTA` WHERE `id_studente`= " +"'" + idS + "';";
 				PreparedStatement st = c.prepareStatement(deleteFromRichiesta);
 				st.execute();
-
 				String deleteFromProgettoFormativo = "DELETE FROM `PROGETTO FORMATIVO` WHERE `Id`= " +"'" + idS + "';";
 				st = c.prepareStatement(deleteFromProgettoFormativo);
 				st.execute();
 			}
-
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		String selectRichiesta = "SELECT * FROM `RICHIESTA`";
 		ListaRichieste listaRichieste = new ListaRichieste();
-
 		try {
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(selectRichiesta);
-
 			while(rs.next()) {
-
 				Richiesta richiesta = new Richiesta();
 				richiesta.setIdStudente(rs.getInt("id_studente"));
 				richiesta.setStato(rs.getBoolean("Stato"));
@@ -106,7 +103,6 @@ public class AccettaRifiutaRichiesta extends HttpServlet {
 				richiesta.setNomeUtenteResponsabileAziendale(rs.getString("Responsabile Aziendale"));
 				listaRichieste.addRichiesta(richiesta);
 			}
-
 			userSession.setAttribute("listaRichieste", listaRichieste);
 			st.close();
 			rs.close();
@@ -116,5 +112,4 @@ public class AccettaRifiutaRichiesta extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
 }

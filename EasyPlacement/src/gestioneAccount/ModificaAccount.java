@@ -16,15 +16,22 @@ import javax.servlet.http.HttpSession;
 import bean.ListaUtenti;
 import database.ConnessioneDB;
 import bean.Studente;
+/**
+ * @author gregoriosaggese
+ *
+ */
 
 /**
  * Servlet implementation class ModificaAccount
+ * Classe che definisce <i>ModificaAccount</i> 
  */
+
 @WebServlet("/ModificaAccount")
 public class ModificaAccount extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * costruttore vuoto
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public ModificaAccount() {
@@ -40,23 +47,19 @@ public class ModificaAccount extends HttpServlet {
 	}
 
 	/**
+	 * metodo che modifica i dati di uno specifico utente nel database e aggiorna la lista utenti
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
 		HttpSession session = request.getSession();
-
 		String username = request.getParameter("username");
 		String email1 = request.getParameter("emailRegistrazione");
 		String numTelefono = request.getParameter("numTelefono");
 		String password = request.getParameter("passwordRegistrazione");
 		int idS = Integer.parseInt(request.getParameter("id"));
-
 		try {
 			ConnessioneDB conn = new ConnessioneDB();
 			Connection c = conn.getConnection();
-
 			String updateRichiesta = "UPDATE `STUDENTE` SET `Username`= ?,"
 					+ "`Email`= ?,`Password`= ? ,`Numero_Telefonico`= ? WHERE `studente_id`= " +"'" + idS + "';";
 			PreparedStatement psmt = c.prepareStatement(updateRichiesta);
@@ -64,28 +67,19 @@ public class ModificaAccount extends HttpServlet {
 			psmt.setString(2, email1);
 			psmt.setString(3, password);
 			psmt.setString(4, numTelefono);
-
 			psmt.executeUpdate();
-
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		
 		try {
 			ListaUtenti lista = new ListaUtenti();
-
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			String sqlGetUser;
-
 			sqlGetUser = "SELECT  `Username` ,  "
 					+ "`Password`,`Nome`,`Cognome`,`Email`,`Numero_Telefonico` FROM  `STUDENTE`; ";
-
 			Statement st = c.createStatement();
-
 			ResultSet rs = st.executeQuery(sqlGetUser);
-
 			String nome,cognome,email,numeroTelefono;
 			Studente studente = null;
 			while (rs.next()) {
@@ -95,7 +89,6 @@ public class ModificaAccount extends HttpServlet {
 				cognome = rs.getString("Cognome");
 				email = rs.getString("Email");
 				numeroTelefono = rs.getString("Numero_Telefonico");
-
 				studente = new Studente();
 				studente.setUsername(username1);
 				studente.setPassword(pass1);
@@ -113,9 +106,6 @@ public class ModificaAccount extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		response.sendRedirect(request.getContextPath()+"/index.jsp");
-
 	}
-
 }

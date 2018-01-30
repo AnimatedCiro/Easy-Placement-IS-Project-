@@ -19,13 +19,20 @@ import bean.Utente;
 import database.ConnessioneDB;
 
 /**
+ * @author gregoriosaggese
+ *
+ */
+
+/**
  * Servlet implementation class FirmaDocumento
+ * Classe che definisce <i>FirmaDocumento</i> 
  */
 @WebServlet("/FirmaDocumento")
 public class FirmaDocumento extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * costruttore vuoto
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public FirmaDocumento() {
@@ -41,65 +48,48 @@ public class FirmaDocumento extends HttpServlet {
 	}
 
 	/**
+	 * metodo che firma la richiesta formativa dello studente da parte del presidente consiglio didattico,tutor accademico,tutor aziendale
+	 * aggiorna la lista progetto formativo
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		String id;
-		HttpSession userSession = request.getSession();
-		
+		HttpSession userSession = request.getSession();	
 		id = request.getParameter("action").substring(6);
-
 		int idS = Integer.parseInt(id); 
-
 		Utente utente = (Utente) request.getSession().getAttribute("user");
-
 		try {
-
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
-
-
 			if(utente.getUsername().contains("tutorAziendale")) {
-
 				String firma = "UPDATE `PROGETTO FORMATIVO` SET `Firma_Tutor_Aziendale`= ? WHERE `Id`= " +"'" + idS + "';";
 				PreparedStatement psmt = c.prepareStatement(firma);
 				psmt.setBoolean(1, true);
 				psmt.executeUpdate();
 			}
-
 			if(utente.getUsername().contains("tutorAccademico")) {
-
 				String firma = "UPDATE `PROGETTO FORMATIVO` SET `Firma_Tutor_Accademico`= ? WHERE `Id`= " +"'" + idS + "';";
 				PreparedStatement psmt = c.prepareStatement(firma);
 				psmt.setBoolean(1, true);
 				psmt.executeUpdate();
 			}
-
 			if(utente.getUsername().contains("presidenteConsiglioDidattico")) {
-
 				String firma = "UPDATE `PROGETTO FORMATIVO` SET `Firma_Presidente_Consiglio_Didattico`= ? WHERE `Id`= " +"'" + idS + "';";
 				PreparedStatement psmt = c.prepareStatement(firma);
 				psmt.setBoolean(1, true);
 				psmt.executeUpdate();
 			}
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		String selectProgettoFormativo = "SELECT * FROM `PROGETTO FORMATIVO`";
 		ListaProgettiFormativi listaprogettiFormativi = new ListaProgettiFormativi();
-
 		try {
 			ConnessioneDB con = new ConnessioneDB();
 			Connection c = con.getConnection();
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery(selectProgettoFormativo);
-
 			while(rs.next()) {
-
 				ProgettoFormativo progettoFormativo = new ProgettoFormativo();
 				progettoFormativo.setId(rs.getInt("Id"));
 				progettoFormativo.setNome(rs.getString("Nome"));
@@ -131,24 +121,15 @@ public class FirmaDocumento extends HttpServlet {
 				progettoFormativo.setInpossessodiLaurea(rs.getString("InpossessodiLaurea"));
 				progettoFormativo.setPortatoreHandicap(rs.getBoolean("PortatoreHandicap"));
 				progettoFormativo.setDataFirma(rs.getString("DataFirma"));
-
 				listaprogettiFormativi.addProgettoFormativo(progettoFormativo);
 			}
-
 			userSession.setAttribute("listaprogettiFormativi", listaprogettiFormativi);
 			response.sendRedirect(request.getContextPath()+"/index.jsp");
 			st.close();
 			rs.close();
 			c.close();
-
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
-
-
 	}
-
-
 }

@@ -17,13 +17,21 @@ import bean.Registro;
 import database.ConnessioneDB;
 
 /**
- * Servlet implementation class FirmaPresenza
+ * @author gregoriosaggese
+ *
  */
+
+/**
+ * Servlet implementation class FirmaPresenza
+ * Classe che definisce <i>FirmaPresenza</i> 
+ */
+
 @WebServlet("/FirmaPresenza")
 public class FirmaPresenza extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * costruttore vuoto
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public FirmaPresenza() {
@@ -39,6 +47,7 @@ public class FirmaPresenza extends HttpServlet {
 	}
 
 	/**
+	 * metodo che inserisce le firme nel database e aggiorna la lista del registro
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,28 +59,19 @@ public class FirmaPresenza extends HttpServlet {
 		String id = request.getParameter("id1");
 		int idS = Integer.parseInt(id);
 		String data = request.getParameter("data");
-		System.out.println(id);
 		int i=1;
-
-
-
 		try {
-
 			con = new ConnessioneDB();
 			c = con.getConnection();
-
 			String sql = "INSERT INTO `REGISTRO` "
 					+ "(`Data` ,`Firma` ,`Id_Progetto_Formativo`) "
 					+ "VALUES ( ?,?,? ); ";
-
 			PreparedStatement psmt = c.prepareStatement(sql);
 			psmt.setString(1, data);
 			psmt.setBoolean(2, true);
 			psmt.setInt(3, idS);
 			psmt.executeUpdate();
-
 		}catch (Exception e) {
-
 			String messageDetail;
 			if(e.getMessage().equals("Duplicate entry '"+data+"' for key 'PRIMARY'")) {
 				System.out.println("sonoqui");
@@ -83,8 +83,6 @@ public class FirmaPresenza extends HttpServlet {
 				response.sendRedirect(request.getContextPath()+"/message.jsp");
 			}
 		}
-
-
 		if(i==1) {
 			ListaRegistro listaRegistro = new ListaRegistro();
 			try {
@@ -107,11 +105,5 @@ public class FirmaPresenza extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-
-
-
-
-
 	}
-
 }

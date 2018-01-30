@@ -1,3 +1,8 @@
+<%@page import="bean.ListaTirocini"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.GregorianCalendar"%>
 <%@page import="bean.ListaRegistro"%>
 <%@page import="bean.PresidenteConsiglioDidattico"%>
 <%@page import="bean.ListaProgettiFormativi"%>
@@ -53,6 +58,7 @@ td, th {
 					.getAttribute("user");
 
 			ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+			ListaTirocini tirocini = (ListaTirocini) session.getAttribute("listaTirocini");
 	%>
 
 	<div
@@ -108,35 +114,54 @@ td, th {
 
 
 			<%
-				ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
+				ListaProgettiFormativi lista2 = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
+
+					System.out.println(lista2.getListaProgettoFormativo().size());
+					ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
 					int o = 0;
-					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
+					for (int i = 0; i < lista2.getListaProgettoFormativo().size(); i++) {
 						if (lista.getListaProgettoFormativo().get(i).isFirma_Azienda() == true
-								&& lista.getListaProgettoFormativo().get(i).isFirma_Presidente_Consiglio_Didattico() == true
-								&& lista.getListaProgettoFormativo().get(i).isFirma_Studente() == true
-								&& lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Accademico() == true
-								&& lista.getListaProgettoFormativo().get(i).isFirma_Tutor_Aziendale() == true) {
+								&& lista2.getListaProgettoFormativo().get(i)
+										.isFirma_Presidente_Consiglio_Didattico() == true
+								&& lista2.getListaProgettoFormativo().get(i).isFirma_Studente() == true
+								&& lista2.getListaProgettoFormativo().get(i).isFirma_Tutor_Accademico() == true
+								&& lista2.getListaProgettoFormativo().get(i).isFirma_Tutor_Aziendale() == true) {
+							System.out.println(lista2.getListaProgettoFormativo().get(i).getDataFine());
 							for (int x = 0; x < registro.getListaRegistro().size(); x++) {
-								if (lista.getListaProgettoFormativo().get(i).getId() == registro.getListaRegistro().get(x)
-										.getId()
-										&& lista.getListaProgettoFormativo().get(i).getDataFine()
-												.equalsIgnoreCase(registro.getListaRegistro().get(x).getData())
-										&& registro.getListaRegistro().get(x).getIsFirmed() == false) {
-									o = 1;
+
+								System.out.println(registro.getListaRegistro().get(x).getData());
+
+								GregorianCalendar data1 = new GregorianCalendar();
+								DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+								Date d1 = format.parse(lista2.getListaProgettoFormativo().get(i).getDataFine());
+								data1.setTime(d1);
+
+								String data = format.format(data1.getTimeInMillis() - 24 * 60 * 60 * 100);
+
+								System.out.println("DATA = " + data);
+
+								if (lista2.getListaProgettoFormativo().get(i).getId() == registro.getListaRegistro().get(x)
+										.getId() && data.equalsIgnoreCase(registro.getListaRegistro().get(x).getData())
+										&& registro.getListaRegistro().get(x).getIsFirmed() == true) {
+									for (int y = 0; y < tirocini.getListaTirocini().size(); y++) {
+										if (tirocini.getListaTirocini().get(y).isCompletato() == false) {
+											o = 1;
 			%>
 
 			<form action="ConvalidaFinaleTirocinio" method="post"
 				name="convalidafinale">
 				<input style="display: none;" type="text" name="id"
-					value="<%=lista.getListaProgettoFormativo().get(i).getId()%>">
-				<label><%=lista.getListaProgettoFormativo().get(i).getNome()%></label>
-				<label><%=lista.getListaProgettoFormativo().get(i).getCognome()%></label>
+					value="<%=lista2.getListaProgettoFormativo().get(i).getId()%>">
+				<label><%=lista2.getListaProgettoFormativo().get(i).getNome()%></label>
+				<label><%=lista2.getListaProgettoFormativo().get(i).getCognome()%></label>
 				<input style="cursor: pointer;" type="submit"
 					value="Convalida Tirocinio">
 			</form>
 
 			<%
 				}
+									}
+								}
 							}
 						}
 					}

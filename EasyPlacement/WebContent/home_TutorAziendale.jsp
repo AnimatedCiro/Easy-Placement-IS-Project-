@@ -107,12 +107,12 @@ a:link, a:visited {
 						}
 									} else {
 					%>
-					
+
 					<%
 						}
 								} else {
 					%>
-					
+
 					<%
 						}
 							}
@@ -130,20 +130,56 @@ a:link, a:visited {
 
 
 			<%
-				int o = 0;
+				ListaUtenti listaUtenti1 = (ListaUtenti) session.getAttribute("listaUtenti");
+					int o = 0;
+
+					/*for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
+						if (tutor_Aziendale.getUsername().equalsIgnoreCase(
+								lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale())) {
+							int id = lista.getListaProgettoFormativo().get(i).getId();
+							for (int y = 0; y < listaTirocini2.getListaTirocini().size(); y++) {
+								if (id == listaTirocini2.getListaTirocini().get(y).getId()) {
+									for (int z = 0; z < listaUtenti.getListaUtenti().size(); z++) {
+										if (id == listaUtenti.getListaUtenti().get(z).getUserId()) {
+											String iniziale = listaUtenti.getListaUtenti().get(z).getNome().substring(0, 1);
+											String finale = listaUtenti.getListaUtenti().get(z).getNome().substring(1,
+													listaUtenti.getListaUtenti().get(z).getNome().length());
+											String nom = iniziale.toUpperCase() + finale.toLowerCase();
+					
+											String inizial = listaUtenti.getListaUtenti().get(z).getCognome().substring(0,
+													1);
+											String fina = listaUtenti.getListaUtenti().get(z).getCognome().substring(1,
+													listaUtenti.getListaUtenti().get(z).getCognome().length());
+											String cognom = inizial.toUpperCase() + fina.toLowerCase();*/
+
 					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
 						if (lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale()
 								.equalsIgnoreCase(tutor_Aziendale.getUsername())) {
+							int id = lista.getListaProgettoFormativo().get(i).getId();
 							for (int x = 0; x < listaTirocini.getListaTirocini().size(); x++) {
 								if (lista.getListaProgettoFormativo().get(i).getId() == listaTirocini.getListaTirocini()
 										.get(x).getId() && listaTirocini.getListaTirocini().get(x).isCompletato() == true) {
-									o = 1;
+									for (int z = 0; z < listaUtenti1.getListaUtenti().size(); z++) {
+										if (id == listaUtenti1.getListaUtenti().get(z).getUserId()) {
+											String iniziale = listaUtenti1.getListaUtenti().get(z).getNome().substring(0,
+													1);
+											String finale = listaUtenti1.getListaUtenti().get(z).getNome().substring(1,
+													listaUtenti1.getListaUtenti().get(z).getNome().length());
+											String nom = iniziale.toUpperCase() + finale.toLowerCase();
+
+											String inizial = listaUtenti1.getListaUtenti().get(z).getCognome().substring(0,
+													1);
+											String fina = listaUtenti1.getListaUtenti().get(z).getCognome().substring(1,
+													listaUtenti1.getListaUtenti().get(z).getCognome().length());
+											String cognom = inizial.toUpperCase() + fina.toLowerCase();
+											o = 1;
 			%>
-
-			<a href="questionarioAzienda.jsp">Vai a compila questionario</a>
-
+			<a style="border: 3px solid;" href="questionarioAzienda.jsp">Vai
+				a compila questionario di: <%=nom + " " + cognom%></a>
 			<%
 				}
+									}
+								}
 							}
 						}
 					}
@@ -172,7 +208,6 @@ a:link, a:visited {
 			<%
 				ListaUtenti listaUtenti = (ListaUtenti) session.getAttribute("listaUtenti");
 					ListaTirocini listaTirocini2 = (ListaTirocini) session.getAttribute("listaTirocini");
-
 					for (int i = 0; i < lista.getListaProgettoFormativo().size(); i++) {
 						if (tutor_Aziendale.getUsername().equalsIgnoreCase(
 								lista.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale())) {
@@ -223,22 +258,16 @@ a:link, a:visited {
 						if (tutor_Aziendale.getUsername().equalsIgnoreCase(
 								lisaPF.getListaProgettoFormativo().get(i).getNome_Utente_Tutor_Aziendale())) {
 			%>
-
 			<a
 				href="consultaRegistro.jsp?uid=<%=lisaPF.getListaProgettoFormativo().get(i).getId()%>"
 				style="background-color: #ff8221; color: black; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border: 3px solid;"><%=lisaPF.getListaProgettoFormativo().get(i).getNome() + "  "
 								+ lisaPF.getListaProgettoFormativo().get(i).getCognome()%></a>
-
-
 			<%
 				}
 					}
 			%>
 
 		</div>
-
-
-
 		<%
 			} catch (Exception e) {
 				response.sendRedirect(request.getContextPath() + "/pageNotFound.jsp");
