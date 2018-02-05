@@ -181,10 +181,10 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			<form action="RicercaAzienda" method="post" name="ricerca">
 				<input id="barraRicerca" name="campoRicerca"
 					style="position: absolute; border-radius: 10px 10px 10px 10px; width: 80%; left: 44%; top: -20px;"
-					type="text" class="form-control" placeholder ="Inserisci nome azienda...">
-				<input style="top: -50px; left: 95%; width: 10%"
-					class="btn btn-default" type="submit" value="Cerca"
-					id="buttonCerca">
+					type="text" class="form-control"
+					placeholder="Inserisci nome azienda..."> <input
+					style="top: -50px; left: 95%; width: 10%" class="btn btn-default"
+					type="submit" value="Cerca" id="buttonCerca">
 
 			</form>
 			<div style="margin-top: -100px;">
@@ -241,6 +241,7 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 				ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
 
 					for (int i = 0; i < registro.getListaRegistro().size(); i++) {
+						if (registro.getListaRegistro().get(i).getId() == studente1.getUserId()) {
 			%>
 			<form style="margin-top: 10px;">
 				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
@@ -251,6 +252,7 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 
 			<%
 				}
+					}
 			%>
 
 		</div>

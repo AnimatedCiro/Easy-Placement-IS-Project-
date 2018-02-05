@@ -129,7 +129,7 @@ td, th {
 							System.out.println(lista2.getListaProgettoFormativo().get(i).getDataFine());
 							for (int x = 0; x < registro.getListaRegistro().size(); x++) {
 
-								System.out.println(registro.getListaRegistro().get(x).getData());
+								
 
 								GregorianCalendar data1 = new GregorianCalendar();
 								DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
@@ -138,7 +138,7 @@ td, th {
 
 								String data = format.format(data1.getTimeInMillis() - 24 * 60 * 60 * 100);
 
-								System.out.println("DATA = " + data);
+								
 
 								if (lista2.getListaProgettoFormativo().get(i).getId() == registro.getListaRegistro().get(x)
 										.getId() && data.equalsIgnoreCase(registro.getListaRegistro().get(x).getData())
@@ -152,8 +152,7 @@ td, th {
 				name="convalidafinale">
 				<input style="display: none;" type="text" name="id"
 					value="<%=lista2.getListaProgettoFormativo().get(i).getId()%>">
-				<label><%=lista2.getListaProgettoFormativo().get(i).getNome()%></label>
-				<label><%=lista2.getListaProgettoFormativo().get(i).getCognome()%></label>
+				<a><%=lista2.getListaProgettoFormativo().get(i).getNome()%></a> <a><%=lista2.getListaProgettoFormativo().get(i).getCognome()%></a>
 				<input style="cursor: pointer;" type="submit"
 					value="Convalida Tirocinio">
 			</form>

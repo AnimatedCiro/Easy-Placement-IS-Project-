@@ -239,7 +239,6 @@ a:link, a:visited {
 			%>
 		</div>
 
-
 		<div id="progettoFormativo"
 			style="position: absolute; top: 50px; height: 100%; width: 100%;"
 			class="row">

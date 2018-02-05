@@ -28,6 +28,7 @@ label {
 	cursor: pointer;
 	position: relative;
 }
+
 label .check-box-effect {
 	display: inline-block;
 	position: relative;
@@ -37,6 +38,7 @@ label .check-box-effect {
 	border: 2px solid #dcdcdc;
 	border-radius: 10%;
 }
+
 label .check-box-effect:before {
 	content: "";
 	width: 0px;
@@ -50,6 +52,7 @@ label .check-box-effect:before {
 	transition: width 50ms ease 50ms;
 	transform-origin: 0% 0%;
 }
+
 label .check-box-effect:after {
 	content: "";
 	width: 0;
@@ -63,45 +66,55 @@ label .check-box-effect:after {
 	transition: width 50ms ease;
 	transform-origin: 0% 0%;
 }
+
 label:hover .check-box-effect:before {
 	width: 5px;
 	transition: width 100ms ease;
 }
+
 label:hover .check-box-effect:after {
 	width: 10px;
 	transition: width 150ms ease 100ms;
 }
+
 input[type="checkbox"] {
 	display: none;
 }
+
 input[type="checkbox"]:checked+.check-box-effect {
 	background-color: green !important;
 	transform: scale(1.25);
 }
+
 input[type="checkbox"]:checked+.check-box-effect:after {
 	width: 10px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
+
 input[type="checkbox"]:checked+.check-box-effect:before {
 	width: 5px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
+
 input[type="checkbox"]:checked:hover+.check-box-effect {
 	background-color: #dcdcdc;
 	transform: scale(1.25);
 }
+
 input[type="checkbox"]:checked:hover+.check-box-effect:after {
 	width: 10px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
+
 input[type="checkbox"]:checked:hover+.check-box-effect:before {
 	width: 5px;
 	background: #333;
 	transition: width 150ms ease 100ms;
 }
+
 #nomeUtenteLoggato {
 	margin-right: 10px;
 	list-style-type: none;
@@ -142,42 +155,43 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 			</div>
 			<%
 				try {
+					String id = request.getParameter("id_studente");
+					int idS = Integer.parseInt(id);
 					ListaRegistro registro = (ListaRegistro) session.getAttribute("listaRegistro");
 
 					if (registro.getListaRegistro().size() > 3) {
 
 						for (int i = registro.getListaRegistro().size() - 3; i < registro.getListaRegistro().size(); i++) {
+							if (registro.getListaRegistro().get(i).getId() == idS) {
 			%>
 			<form style="margin-top: 10px;">
 				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
 					style="left: 100px;"><input type="checkbox"
-					checked="checked" disabled="disabled" 
-						id="chkProdTomove" />
-					<span class="check-box-effect"></span> </label>
+					checked="checked" disabled="disabled" id="chkProdTomove" /> <span
+					class="check-box-effect"></span> </label>
 			</form>
 			<%
 				}
+						}
 					} else {
 
 						for (int i = 0; i < registro.getListaRegistro().size(); i++) {
+							if (registro.getListaRegistro().get(i).getId() == idS) {
 			%>
 			<form style="margin-top: 10px;">
 				<a style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=registro.getListaRegistro().get(i).getData()%></a><label
 					style="left: 100px;"><input type="checkbox"
-					checked="checked" disabled="disabled" 
-						id="chkProdTomove" />
-					<span class="check-box-effect"></span> </label>
+					checked="checked" disabled="disabled" id="chkProdTomove" /> <span
+					class="check-box-effect"></span> </label>
 			</form>
 			<%
 				}
+						}
 					}
 			%>
 
 			<%
-				String id = request.getParameter("id_studente");
-					int idS = Integer.parseInt(id);
-
-					String stringDataInizio = "", stringDataFine = "";
+				String stringDataInizio = "", stringDataFine = "";
 
 					ListaProgettiFormativi lista = (ListaProgettiFormativi) session.getAttribute("listaprogettiFormativi");
 
@@ -259,10 +273,27 @@ input[type="checkbox"]:checked:hover+.check-box-effect:before {
 					type="submit" value="Firma">
 			</form>
 			<%
-													i = dates.size();
+				i = dates.size();
 												} else {
 												}
-											}
+											} else {
+			%>
+			<form action="FirmaPresenza" method="post" name="firmapresenza"
+				onsubmit="return(validator())" style="margin-top: 10px;">
+				<input
+					style="font-size: 15px; display: none; position: relative; top: 0%; left: 0%; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); -o-transform: translate(0%, 0%); transform: translate(0%, 0%); width: 150px; padding: 8px; margin-bottom: 0px; margin-top: 0px; border: none; border-radius: 4px; box-sizing: border-box;"
+					readonly="readonly" value="<%=id%>" name="id1"><a
+					style="position: relative; top: -10px;">Data:&nbsp;&nbsp; <%=dataStr2%></a><input
+					style="display: none;" name="data" value="<%=dataStr2%>"> <label
+					style="left: 100px;"><input type="checkbox" name="check"
+					id="chkProdTomove" /> <span class="check-box-effect"></span> </label> <input
+					style="font-size: 15px; background-color: #ff8221; cursor: pointer; position: relative; top: -10px; left: 25%; -webkit-transform: translate(0%, 0%); -moz-transform: translate(0%, 0%); -ms-transform: translate(0%, 0%); -o-transform: translate(0%, 0%); curtransform: translate(0%, 0%); width: 70px; padding: 8px; margin-bottom: 0px; margin-top: 0px; display: inline-block; border: 3px solid; border-radius: 4px; box-sizing: border-box;"
+					type="submit" value="Firma">
+			</form>
+
+			<%
+				}
+
 										} else {
 											i = dates.size();
 										}

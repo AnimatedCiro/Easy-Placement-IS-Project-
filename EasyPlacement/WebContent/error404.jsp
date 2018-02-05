@@ -31,10 +31,6 @@ body {
 </style>
 </head>
 <body>
-
-
-	
-
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -55,11 +51,5 @@ body {
 			</div>
 		</div>
 	</div>
-
-
-
-
-
-
 </body>
 </html>
